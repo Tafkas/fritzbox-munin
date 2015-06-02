@@ -28,7 +28,7 @@ def print_values():
     
 def print_config():
     print "graph_title AVM Fritz!Box Connection Uptime"
-    print "graph_args graph_args --base 1000 -l 0"
+    print "graph_args --base 1000 -l 0"
     print 'graph_vlabel uptime in days'
     print "graph_scale no'"
     print "graph_category network"
