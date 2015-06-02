@@ -8,6 +8,10 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router
 ## fritzbox_traffic
 
   fritzbox_traffic shows you the traffic of the WAN interface.
+ 
+## fritzbox_uptime
+
+  fritzbox_uptime shows you the connection uptime in days
 
 ## Installation & Configuration 
 
