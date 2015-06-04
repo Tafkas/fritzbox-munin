@@ -14,18 +14,21 @@
   #%# capabilities=autoconf
 """
 
-import sys, os
+import sys
+
 from fritzconnection import FritzConnection
+
 
 def print_values():
     try:
         connection = FritzConnection()
     except Exception as e:
         sys.exit("Couldn't get connection uptime")
-        
+
     uptime = connection.call_action('WANIPConnection', 'GetStatusInfo')['NewUptime']
-    print ('uptime.value %.2f' % (int(uptime)/86400.0))
-    
+    print ('uptime.value %.2f' % (int(uptime) / 86400.0))
+
+
 def print_config():
     print "graph_title AVM Fritz!Box Connection Uptime"
     print "graph_args --base 1000 -l 0"
@@ -35,11 +38,12 @@ def print_config():
     print "uptime.label uptime"
     print "uptime.draw AREA"
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == 'config':
         print_config()
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print "yes"    # Some docs say it'll be called with fetch, some say no arg at all
+        print "yes"  # Some docs say it'll be called with fetch, some say no arg at all
     elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
         try:
             print_values()

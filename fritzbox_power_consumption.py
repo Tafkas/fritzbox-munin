@@ -22,22 +22,23 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/energy.lua'
-pattern = re.compile('.*\/(.*act?)".*=.*"(.*?)"')
-DEVICE_MAPPING = {  'rate_abact' : 'ab', 'rate_dspact': 'dsl' , 'rate_sumact': 'system', 
-                    'rate_systemact': 'cpu', 'rate_usbhostact': 'usb', 'rate_wlanact': 'wifi'}
+pattern = re.compile(".*/(.*act?)\".*=.*\"(.*?)\"")
+DEVICE_MAPPING = {'rate_abact': 'ab', 'rate_dspact': 'dsl', 'rate_sumact': 'system',
+                  'rate_systemact': 'cpu', 'rate_usbhostact': 'usb', 'rate_wlanact': 'wifi'}
+
 
 def get_power_consumption():
     """get the current power consumption usage"""
-    
+
     server = os.environ['fritzbox_ip']
     password = os.environ['fritzbox_password']
-    
+
     sid = fh.get_sid(server, password)
     data = fh.get_page(server, sid, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
         for m in matches:
-            print'%s.value %d' %  (DEVICE_MAPPING[m.group(1)], int(m.group(2)))
+            print'%s.value %d' % (DEVICE_MAPPING[m.group(1)], int(m.group(2)))
 
 
 def print_config():
@@ -89,7 +90,7 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
         print 'yes'
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
-    # Some docs say it'll be called with fetch, some say no arg at all
+        # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_power_consumption()
         except:

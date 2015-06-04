@@ -22,22 +22,22 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/ecostat.lua'
-pattern = re.compile('.*\/(StatRAM.*?)".*=.*"(.*?)"')
+pattern = re.compile(".*/(StatRAM.*?)\".*=.*\"(.*?)\"")
 USAGE_MAPPING = {'StatRAMCacheUsed': 'cache', 'StatRAMPhysFree': 'free', 'StatRAMStrictlyUsed': 'strict'}
 
 
 def get_memory_usage():
     """get the current memory usage"""
-    
+
     server = os.environ['fritzbox_ip']
     password = os.environ['fritzbox_password']
-    
+
     sid = fh.get_sid(server, password)
     data = fh.get_page(server, sid, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
         for m in matches:
-            print'%s.value %d' %  (USAGE_MAPPING[m.group(1)], int(m.group(2).split(',')[0]))
+            print'%s.value %d' % (USAGE_MAPPING[m.group(1)], int(m.group(2).split(',')[0]))
 
 
 def print_config():
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
         print 'yes'
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
-    # Some docs say it'll be called with fetch, some say no arg at all
+        # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_memory_usage()
         except:

@@ -22,7 +22,7 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/energy.lua'
-pattern = re.compile('(\d+) WLAN')
+pattern = re.compile("(\d+) WLAN")
 
 
 def get_connected_wifi_devices():
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
         print 'yes'
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
-    # Some docs say it'll be called with fetch, some say no arg at all
+        # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_connected_wifi_devices()
         except:

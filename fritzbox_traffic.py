@@ -14,26 +14,31 @@
   #%# capabilities=autoconf
 """
 
-import sys, os
+import sys
+
 from fritzconnection import FritzConnection
+
 
 def print_values():
     try:
-        connection = FritzConnection()
+        con = FritzConnection()
     except Exception as e:
         sys.exit("Couldn't get WAN traffic")
-        
-    down_traffic = connection.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
+
+    down_traffic = con.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
     print ('down.value %d' % down_traffic)
-    
-    up_traffic = connection.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
+
+    up_traffic = con.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
     print ('up.value %d' % up_traffic)
-    
-    max_down_traffic = connection.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')['NewLayer1DownstreamMaxBitRate']
+
+    max_down_traffic = con.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+        'NewLayer1DownstreamMaxBitRate']
     print ('maxdown.value %d' % max_down_traffic)
-    
-    max_up_traffic = connection.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')['NewLayer1UpstreamMaxBitRate']
-    print ('maxup.value %d' % max_up_traffic)    
+
+    max_up_traffic = con.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+        'NewLayer1UpstreamMaxBitRate']
+    print ('maxup.value %d' % max_up_traffic)
+
 
 def print_config():
     print "graph_title AVM Fritz!Box WAN traffic"
@@ -64,11 +69,12 @@ def print_config():
     print "maxup.draw LINE1"
     print "maxup.info Maximum speed of the WAN interface."
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == 'config':
         print_config()
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print "yes"    # Some docs say it'll be called with fetch, some say no arg at all
+        print "yes"  # Some docs say it'll be called with fetch, some say no arg at all
     elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
         try:
             print_values()
