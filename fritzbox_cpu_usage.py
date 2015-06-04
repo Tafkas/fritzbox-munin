@@ -20,7 +20,6 @@ import os
 import re
 import sys
 import fritzbox_helper as fh
-from io import StringIO, BytesIO
 
 PAGE = '/system/ecostat.lua'
 pattern = re.compile('.*\/(StatCPU)".*=.*"(.*?)"')
