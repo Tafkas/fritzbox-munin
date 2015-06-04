@@ -24,6 +24,11 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router
 
   fritzbox\_memory\_usage shows you the memory usage (requires password)
 
+##  fritzbox\_power\_consumption
+
+  fritzbox\_power\_consumption shows you the power consumption (requires password)
+  
+
 ## Installation & Configuration 
 
 1. Copy all the scripts to =/usr/share/munin/plugins
