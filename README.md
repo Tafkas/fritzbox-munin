@@ -19,6 +19,10 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router
 ## fritzbox\_cpu\_usage
 
   fritzbox\_cpu\_usage shows you the cpu usage (requires password)
+  
+## fritzbox\_memory\_usage
+
+  fritzbox\_memory\_usage shows you the memory usage (requires password)
 
 ## Installation & Configuration 
 
