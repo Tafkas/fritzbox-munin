@@ -49,7 +49,7 @@ def print_config():
     print "graph_order cpu"
     print "graph_scale no"
     print "cpu.label system"
-    print "cpu.type DERIVE"
+    print "cpu.type GAUGE"
     print "cpu.graph AREA"
     print "cpu.min 0"
     print "cpu.info Fritzbox CPU usage"
