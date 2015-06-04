@@ -18,36 +18,35 @@
 
 import hashlib
 import httplib
-import os
 import re
 import sys
 from xml.dom import minidom
-from io import StringIO, BytesIO
 
 USER_AGENT = "Mozilla/5.0 (U; Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
 
-def get_sid(server,password,port=80):
+
+def get_sid(server, password, port=80):
     """Obtains the sid after login into the fritzbox"""
-    conn = httplib.HTTPConnection(server+':'+str(port))
+    conn = httplib.HTTPConnection(server + ':' + str(port))
 
-    headers = { "Accept" : "application/xml",
-                "Content-Type" : "text/plain",
-                "User-Agent" : USER_AGENT}
+    headers = {"Accept": "application/xml",
+               "Content-Type": "text/plain",
+               "User-Agent": USER_AGENT}
 
-    initialPage='/login_sid.lua'
-    conn.request("GET", initialPage, '', headers)
+    initial_page = '/login_sid.lua'
+    conn.request("GET", initial_page, '', headers)
     response = conn.getresponse()
     data = response.read()
     if response.status != 200:
         print "%s %s" % (response.status, response.reason)
         sys.exit(0)
     else:
-        theXml = minidom.parseString(data)
-        sidInfo = theXml.getElementsByTagName('SID')
-        sid=sidInfo[0].firstChild.data
+        xml_data = minidom.parseString(data)
+        sid_info = xml_data.getElementsByTagName('SID')
+        sid = sid_info[0].firstChild.data
         if sid == "0000000000000000":
-            challengeInfo = theXml.getElementsByTagName('Challenge')
-            challenge=challengeInfo[0].firstChild.data
+            challenge_info = xml_data.getElementsByTagName('Challenge')
+            challenge = challenge_info[0].firstChild.data
             challenge_bf = (challenge + '-' + password).decode('iso-8859-1').encode('utf-16le')
             m = hashlib.md5()
             m.update(challenge_bf)
@@ -55,34 +54,35 @@ def get_sid(server,password,port=80):
         else:
             return sid
 
-    headers = { "Accept" : "text/html,application/xhtml+xml,application/xml",
-                "Content-Type" : "application/x-www-form-urlencoded",
-                "User-Agent" : USER_AGENT}
+    headers = {"Accept": "text/html,application/xhtml+xml,application/xml",
+               "Content-Type": "application/x-www-form-urlencoded",
+               "User-Agent": USER_AGENT}
 
-    loginPage="/login_sid.lua?&response=" + response_bf
-    conn.request("GET", loginPage, '', headers)
+    login_page = "/login_sid.lua?&response=" + response_bf
+    conn.request("GET", login_page, '', headers)
     response = conn.getresponse()
     data = response.read()
     if response.status != 200:
         print "%s %s" % (response.status, response.reason)
         sys.exit(0)
     else:
-        sid = re.search('<SID>(.*?)</SID>', data).group(1)
+        sid = re.search("<SID>(.*?)</SID>", data).group(1)
         if sid == "0000000000000000":
             print "ERROR - No SID received because of invalid password"
             sys.exit(0)
         return sid
 
+
 def get_page(server, sid, page, port=80):
     """Fetches a page from the Fritzbox and returns its content"""
-    conn = httplib.HTTPConnection(server+':'+str(port))
+    conn = httplib.HTTPConnection(server + ':' + str(port))
 
-    headers = { "Accept" : "application/xml",
-                "Content-Type" : "text/plain",
-                "User-Agent" : USER_AGENT}
+    headers = {"Accept": "application/xml",
+               "Content-Type": "text/plain",
+               "User-Agent": USER_AGENT}
 
-    pageWithSid=page+"?sid="+sid
-    conn.request("GET", pageWithSid, '', headers)
+    page_with_sid = page + "?sid=" + sid
+    conn.request("GET", page_with_sid, '', headers)
     response = conn.getresponse()
     data = response.read()
     if response.status != 200:
