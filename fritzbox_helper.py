@@ -5,13 +5,12 @@
   Author: Christian Stade-Schuldt
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
-  If you've put your gunicorn pid somewhere other than the
-  default /var/run/gunicorn.pid, you can add a section like
-  this to your munin-node's plugin configuration:
+  Add the following section to your munin-node's plugin configuration:
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.password [fritzbox password]
+  env.fritzbox_password [fritzbox password]
+  
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
   #%# capabilities=autoconf
