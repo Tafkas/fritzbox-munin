@@ -1,5 +1,5 @@
 # fritzbox-munin
-A collection of munin plugins to monitor your AVM FRITZ!Box router 
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a FRITZ!Box 7362 SL running FRITZ!OS 06.20.
  
 ## Introduction
 
@@ -19,6 +19,10 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router
 ## fritzbox\_cpu\_usage
 
   fritzbox\_cpu\_usage shows you the cpu usage (requires password)
+
+## fritzbox\_cpu\_temperature
+
+  fritzbox\_cpu\_temperature shows you the cpu temperature (requires password)
   
 ## fritzbox\_memory\_usage
 
