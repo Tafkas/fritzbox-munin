@@ -16,8 +16,6 @@
   #%# capabilities=autoconf
 """
 
-import hashlib
-import httplib
 import os
 import re
 import sys
