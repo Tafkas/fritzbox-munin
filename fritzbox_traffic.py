@@ -21,21 +21,21 @@ from fritzconnection import FritzConnection
 
 def print_values():
     try:
-        con = FritzConnection()
+        conn = FritzConnection()
     except Exception as e:
         sys.exit("Couldn't get WAN traffic")
 
-    down_traffic = con.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
+    down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
     print ('down.value %d' % down_traffic)
 
-    up_traffic = con.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
+    up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
     print ('up.value %d' % up_traffic)
 
-    max_down_traffic = con.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+    max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
         'NewLayer1DownstreamMaxBitRate']
     print ('maxdown.value %d' % max_down_traffic)
 
-    max_up_traffic = con.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+    max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
         'NewLayer1UpstreamMaxBitRate']
     print ('maxup.value %d' % max_up_traffic)
 

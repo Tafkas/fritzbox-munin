@@ -21,11 +21,11 @@ from fritzconnection import FritzConnection
 
 def print_values():
     try:
-        connection = FritzConnection()
+        conn = FritzConnection()
     except Exception as e:
         sys.exit("Couldn't get connection uptime")
 
-    uptime = connection.call_action('WANIPConnection', 'GetStatusInfo')['NewUptime']
+    uptime = conn.call_action('WANIPConnection', 'GetStatusInfo')['NewUptime']
     print ('uptime.value %.2f' % (int(uptime) / 86400.0))
 
 
