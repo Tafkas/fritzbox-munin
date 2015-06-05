@@ -42,7 +42,7 @@ def get_uptime():
             if m.group(1) == "uptime_minutes":
                 hours += int(m.group(2)) / 60.0
         uptime = hours / 24
-        print "uptime.value %.2f" % (uptime)
+        print "uptime.value %.2f" % uptime
 
 
 def print_config():
