@@ -42,10 +42,10 @@ def get_cpu_temperature():
 def print_config():
     print "graph_title AVM Fritz!Box CPU temperature"
     print "graph_vlabel degrees Celsius"
-    print "graph_category sensor"
+    print "graph_category sensors"
     print "graph_order tmp"
     print "graph_scale no"
-    print "temp.label sensors"
+    print "temp.label CPU temperature"
     print "temp.type GAUGE"
     print "temp.graph LINE1"
     print "temp.min 0"
