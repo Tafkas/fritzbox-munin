@@ -48,24 +48,23 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts 
 
 ## Installation & Configuration 
 
-0. Pre-requesites for the fritzbox\_traffic and fritzbox\_uptime plugins is the fritzconnection package. To install it  
+0. Pre-requesites for the fritzbox\_traffic and fritzbox\_uptime plugins is the [fritzconnection](https://pypi.python.org/pypi/fritzconnection) package. To install it  
     
-    pip install fritzconnection
+        pip install fritzconnection
 
 1. Copy all the scripts to =/usr/share/munin/plugins
    
 2. Create entry in /etc/munin/plugin-cond.d/munin-node:  
     
-    [fritzbox_\*]  
-    env.fritzbox\_ip *ip_address_to_your_fritzbox*  
-    env.fritzbox\_password *fritzbox_password*  
+        [fritzbox_*]  
+        env.fritzbox_ip <ip_address_to_your_fritzbox>  
+        env.fritzbox_password <fritzbox_password>  
 
-3. Create symbolic links to =/etc/munin/plugins=.
+3. Create symbolic links to /etc/munin/plugins.
 
-4. Restart the munin-node daemon: =/etc/init.d/munin-node restart=.
+4. Restart the munin-node daemon: /etc/init.d/munin-node restart.
 
-5. Done. You should now start to see the charts on the
-      Munin pages.
+5. Done. You should now start to see the charts on the Munin pages.
 
 ## Environment Settings
   
