@@ -7,7 +7,8 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts 
 
 ## fritzbox\_traffic
 
-  fritzbox\_traffic shows you the traffic of the WAN interface (requires fritzconnection)
+  fritzbox\_traffic shows you the traffic of the WAN interface (requires fritzconnection)  
+  ![http://i.imgur.com/hY7dHLW.png](http://i.imgur.com/hY7dHLW.png) ![http://i.imgur.com/9hH2umm.png](http://i.imgur.com/9hH2umm.png)
   
 ## fritzbox\_connection\_uptime
 
