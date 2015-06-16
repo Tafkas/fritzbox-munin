@@ -8,35 +8,42 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts 
 ## fritzbox\_traffic
 
   fritzbox\_traffic shows you the traffic of the WAN interface (requires fritzconnection)  
-  ![http://i.imgur.com/hY7dHLW.png](http://i.imgur.com/hY7dHLW.png) ![http://i.imgur.com/9hH2umm.png](http://i.imgur.com/9hH2umm.png)
+  ![http://i.imgur.com/8BwNMOL.png](http://i.imgur.com/8BwNMOL.png)
   
 ## fritzbox\_connection\_uptime
 
-  fritzbox\_connection\_uptime shows you the connection uptime in days (requires fritzconnection)
+  fritzbox\_connection\_uptime shows you the connection uptime in days (requires fritzconnection)  
+  ![http://i.imgur.com/8oE1OYL.png](http://i.imgur.com/8oE1OYL.png)
   
 ## fritzbox\_cpu\_usage
 
-  fritzbox\_cpu\_usage shows you the cpu usage (requires password)
+  fritzbox\_cpu\_usage shows you the cpu usage (requires password)  
+  ![http://i.imgur.com/A9uGvWP.png](http://i.imgur.com/A9uGvWP.png)
 
 ## fritzbox\_cpu\_temperature
 
-  fritzbox\_cpu\_temperature shows you the cpu temperature (requires password)
+  fritzbox\_cpu\_temperature shows you the cpu temperature (requires password)  
+  ![http://i.imgur.com/duHYhw6.png](http://i.imgur.com/duHYhw6.png)
   
 ## fritzbox\_memory\_usage
 
-  fritzbox\_memory\_usage shows you the memory usage (requires password)
+  fritzbox\_memory\_usage shows you the memory usage (requires password)  
+  ![http://i.imgur.com/WhxrINK.png](http://i.imgur.com/WhxrINK.png)
 
 ##  fritzbox\_power\_consumption
 
-  fritzbox\_power\_consumption shows you the power consumption (requires password)
+  fritzbox\_power\_consumption shows you the power consumption (requires password)  
+  ![http://i.imgur.com/a7uQzn6.png](http://i.imgur.com/a7uQzn6.png)
 
 ## fritzbox\_uptime
 
-  fritzbox\_uptime shows you the uptime in days (requires password)
+  fritzbox\_uptime shows you the uptime in days (requires password)  
+  ![http://i.imgur.com/8oE1OYL.png](http://i.imgur.com/8oE1OYL.png)
 
 ## fritzbox\_wifi\_devices
 
   fritzbox\_wifi\_devices shows you the number of connected wifi clients (requires password)
+  ![http://i.imgur.com/lqvK1b2.png](http://i.imgur.com/lqvK1b2.png)
   
 
 ## Installation & Configuration 
