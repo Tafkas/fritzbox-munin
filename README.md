@@ -38,7 +38,7 @@ A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts 
 ## fritzbox\_uptime
 
   fritzbox\_uptime shows you the uptime in days (requires password)  
-  ![http://i.imgur.com/8oE1OYL.png](http://i.imgur.com/8oE1OYL.png)
+  ![http://i.imgur.com/Jr8OibH.png](http://i.imgur.com/Jr8OibH.png)
 
 ## fritzbox\_wifi\_devices
 
