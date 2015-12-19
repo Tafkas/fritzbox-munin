@@ -22,7 +22,7 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/ecostat.lua'
-pattern = re.compile(".*/(StatTemperature)\".*=.*\"(.*?)\"")
+pattern = re.compile('Query\s=\s"(\d{1,3})')
 
 
 def get_cpu_temperature():
@@ -36,7 +36,7 @@ def get_cpu_temperature():
 
     m = re.search(pattern, data)
     if m:
-        print 'temp.value %d' % (int(m.group(2).split(',')[0]))
+        print 'temp.value %d' % (int(m.group(1)))
 
 
 def print_config():

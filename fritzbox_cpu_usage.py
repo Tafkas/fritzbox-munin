@@ -22,7 +22,7 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/ecostat.lua'
-pattern = re.compile(".*/(StatCPU)\".*=.*\"(.*?)\"")
+pattern = re.compile('Query1\s=\s"(\d{1,3})')
 
 
 def get_cpu_usage():
@@ -36,7 +36,7 @@ def get_cpu_usage():
 
     m = re.search(pattern, data)
     if m:
-        print 'cpu.value %d' % (int(m.group(2).split(',')[0]))
+        print 'cpu.value %d' % (int(m.group(1)))
 
 
 def print_config():

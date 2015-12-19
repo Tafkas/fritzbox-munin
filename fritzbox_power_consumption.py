@@ -22,9 +22,8 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/energy.lua'
-pattern = re.compile(".*/(.*act?)\".*=.*\"(.*?)\"")
-DEVICE_MAPPING = {'rate_abact': 'ab', 'rate_dspact': 'dsl', 'rate_sumact': 'system',
-                  'rate_systemact': 'cpu', 'rate_usbhostact': 'usb', 'rate_wlanact': 'wifi'}
+pattern = re.compile('<td>(.+?)"bar\s(act|fillonly)"(.+?)\s(\d{1,3})\s%')
+DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
 
 
 def get_power_consumption():
@@ -37,8 +36,9 @@ def get_power_consumption():
     data = fh.get_page(server, sid, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
-        for m in matches:
-            print'%s.value %d' % (DEVICE_MAPPING[m.group(1)], int(m.group(2)))
+        data = zip(DEVICES, [m.group(4) for m in matches])
+        for d in data:
+            print'%s.value %s' % (d[0], d[1])
 
 
 def print_config():

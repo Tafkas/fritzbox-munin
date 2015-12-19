@@ -1,5 +1,10 @@
 # fritzbox-munin
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a FRITZ!Box 7362 SL running FRITZ!OS 06.30.
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a 
+FRITZ!Box 7362 SL running FRITZ!OS:131.06.36-32026 BETA. AVM has modified the web interface if the Fritz!Box 
+in the current version that the old scripts do not work anymore. This branch also only works if the language 
+of the Fritz!Box is set to German.
+
+If you are using FRITZ!OS 6.30 use the master branch. 
  
 ## Introduction
 

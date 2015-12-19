@@ -22,7 +22,7 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = '/system/energy.lua'
-pattern = re.compile(".*/(.*uptime_\w+?)\".*=.*\"(.*?)\"")
+pattern = re.compile("(\d+)\s(Tagen|Stunden|Minuten)")
 
 
 def get_uptime():
@@ -37,10 +37,12 @@ def get_uptime():
     if matches:
         hours = 0.0
         for m in matches:
-            if m.group(1) == "uptime_hours":
-                hours += int(m.group(2))
-            if m.group(1) == "uptime_minutes":
-                hours += int(m.group(2)) / 60.0
+            if m.group(2) == 'Tagen':
+                hours += 24 * int(m.group(1))
+            if m.group(2) == "Stunden":
+                hours += int(m.group(1))
+            if m.group(2) == "Minuten":
+                hours += int(m.group(1)) / 60.0
         uptime = hours / 24
         print "uptime.value %.2f" % uptime
 
