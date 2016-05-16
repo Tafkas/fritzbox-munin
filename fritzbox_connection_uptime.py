@@ -14,6 +14,7 @@
   #%# capabilities=autoconf
 """
 
+import os
 import sys
 
 from fritzconnection import FritzConnection
