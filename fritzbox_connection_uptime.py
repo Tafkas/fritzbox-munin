@@ -21,7 +21,7 @@ from fritzconnection import FritzConnection
 
 def print_values():
     try:
-        conn = FritzConnection()
+        conn = FritzConnection(address=os.environ['fritzbox_ip'])
     except Exception as e:
         sys.exit("Couldn't get connection uptime")
 
