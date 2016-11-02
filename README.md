@@ -55,7 +55,7 @@ If you are using the current versio of FRITZ!OS checkout the experimental fritzo
 
 1. Copy all the scripts to =/usr/share/munin/plugins
    
-2. Create entry in /etc/munin/plugin-cond.d/munin-node:  
+2. Create entry in /etc/munin/plugin-conf.d/munin-node:  
     
         [fritzbox_*]  
         env.fritzbox_ip <ip_address_to_your_fritzbox>  
