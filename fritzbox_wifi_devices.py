@@ -40,6 +40,7 @@ def get_connected_wifi_devices():
 
 
 def print_config():
+    print "host_name fritzbox"
     print 'graph_title AVM Fritz!Box Connected Wifi Devices'
     print 'graph_vlabel Number of devices'
     print 'graph_args --base 1000'

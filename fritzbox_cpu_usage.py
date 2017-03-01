@@ -40,6 +40,7 @@ def get_cpu_usage():
 
 
 def print_config():
+    print "host_name fritzbox"
     print "graph_title AVM Fritz!Box CPU usage"
     print "graph_vlabel %"
     print "graph_category system"

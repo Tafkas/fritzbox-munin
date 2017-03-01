@@ -42,6 +42,7 @@ def print_values():
 
 
 def print_config():
+    print "host_name fritzbox"
     print "graph_title AVM Fritz!Box WAN traffic"
     print "graph_args --base 1000"
     print "graph_vlabel bits in (-) / out (+) per \${graph_period}"

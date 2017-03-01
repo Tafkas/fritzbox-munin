@@ -40,6 +40,7 @@ def get_cpu_temperature():
 
 
 def print_config():
+    print "host_name fritzbox"
     print "graph_title AVM Fritz!Box CPU temperature"
     print "graph_vlabel degrees Celsius"
     print "graph_category sensors"

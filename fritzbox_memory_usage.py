@@ -42,6 +42,7 @@ def get_memory_usage():
 
 
 def print_config():
+    print "host_name fritzbox"
     print "graph_title AVM Fritz!Box Memory"
     print "graph_vlabel %"
     print "graph_args --base 1000 -r --lower-limit 0 --upper-limit 100"
