@@ -58,7 +58,10 @@ def get_sid(server, username, password, port=80):
                "Content-Type": "application/x-www-form-urlencoded",
                "User-Agent": USER_AGENT}
 
-    login_page = "/login_sid.lua?username=" + username + "&response=" + response_bf
+    if username == '' or username == 'None':
+        login_page = "/login_sid.lua?&response=" + response_bf
+    else:
+        login_page = "/login_sid.lua?username=" + username + "&response=" + response_bf
     conn.request("GET", login_page, '', headers)
     response = conn.getresponse()
     data = response.read()

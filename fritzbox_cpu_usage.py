@@ -33,7 +33,7 @@ def get_cpu_usage():
     """get the current cpu usage"""
 
     server = os.environ['fritzbox_ip']
-    username = os.environ['fritzbox_username']
+    username = os.getenv('fritzbox_username', "None")
     password = os.environ['fritzbox_password']
 
     sid = fh.get_sid(server, username, password)
