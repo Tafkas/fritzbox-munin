@@ -26,6 +26,9 @@ PAGE = '/system/ecostat.lua'
 pattern = re.compile('Query[1-3]\s="(\d{1,3})')
 USAGE = ['free', 'cache', 'strict']
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_memory_usage():
     """get the current memory usage"""
@@ -44,7 +47,7 @@ def get_memory_usage():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box Memory"
     print "graph_vlabel %"
     print "graph_args --base 1000 -r --lower-limit 0 --upper-limit 100"

@@ -25,6 +25,9 @@ import fritzbox_helper as fh
 PAGE = '/system/ecostat.lua'
 pattern = re.compile('Query\s=\s"(\d{1,3})')
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_cpu_temperature():
     """get the current cpu temperature"""
@@ -42,7 +45,7 @@ def get_cpu_temperature():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box CPU temperature"
     print "graph_vlabel degrees Celsius"
     print "graph_category sensors"

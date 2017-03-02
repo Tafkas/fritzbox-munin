@@ -19,6 +19,9 @@ import sys
 
 from fritzconnection import FritzConnection
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def print_values():
     try:
@@ -31,7 +34,7 @@ def print_values():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box Connection Uptime"
     print "graph_args --base 1000 -l 0"
     print 'graph_vlabel uptime in days'

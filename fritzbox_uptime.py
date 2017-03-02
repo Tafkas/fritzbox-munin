@@ -25,6 +25,9 @@ import fritzbox_helper as fh
 PAGE = '/system/energy.lua'
 pattern = re.compile("(\d+)\s(Tag|Stunden|Minuten)")
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_uptime():
     """get the current uptime"""
@@ -50,7 +53,7 @@ def get_uptime():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box Uptime"
     print "graph_args --base 1000 -l 0"
     print 'graph_vlabel uptime in days'

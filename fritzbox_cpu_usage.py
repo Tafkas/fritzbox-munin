@@ -25,6 +25,9 @@ import fritzbox_helper as fh
 PAGE = '/system/ecostat.lua'
 pattern = re.compile('Query1\s=\s"(\d{1,3})')
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_cpu_usage():
     """get the current cpu usage"""
@@ -42,7 +45,7 @@ def get_cpu_usage():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box CPU usage"
     print "graph_vlabel %"
     print "graph_category system"

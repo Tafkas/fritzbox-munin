@@ -25,6 +25,9 @@ import fritzbox_helper as fh
 PAGE = '/system/energy.lua'
 pattern = re.compile("(\d+) WLAN")
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_connected_wifi_devices():
     """gets the numbrer of currently connected wifi devices"""
@@ -42,7 +45,7 @@ def get_connected_wifi_devices():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print 'graph_title AVM Fritz!Box Connected Wifi Devices'
     print 'graph_vlabel Number of devices'
     print 'graph_args --base 1000'

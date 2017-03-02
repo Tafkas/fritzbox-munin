@@ -26,6 +26,9 @@ PAGE = '/system/energy.lua'
 pattern = re.compile('<td>(.+?)"bar\s(act|fillonly)"(.+?)\s(\d{1,3})\s%')
 DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_power_consumption():
     """get the current power consumption usage"""
@@ -44,7 +47,7 @@ def get_power_consumption():
 
 
 def print_config():
-    print "host_name fritzbox"
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box Power Consumption"
     print "graph_vlabel %"
     print "graph_category network"
