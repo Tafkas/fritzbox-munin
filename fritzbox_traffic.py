@@ -19,6 +19,9 @@ import sys
 
 from fritzconnection import FritzConnection
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def print_values():
     try:
@@ -42,6 +45,7 @@ def print_values():
 
 
 def print_config():
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box WAN traffic"
     print "graph_args --base 1000"
     print "graph_vlabel bits in (-) / out (+) per \${graph_period}"

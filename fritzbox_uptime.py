@@ -9,6 +9,7 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_username [fritzbox username]
   env.fritzbox_password [fritzbox password]
 
   This plugin supports the following munin configuration parameters:
@@ -24,14 +25,18 @@ import fritzbox_helper as fh
 PAGE = '/system/energy.lua'
 pattern = re.compile("(\d+)\s(Tag|Stunden|Minuten)")
 
+# bet box name from first part before '_' in (symlink) file name
+boxname = os.path.basename(__file__).rsplit('_')[0]
+
 
 def get_uptime():
     """get the current uptime"""
 
     server = os.environ['fritzbox_ip']
+    username = os.getenv('fritzbox_username', "None")
     password = os.environ['fritzbox_password']
 
-    sid = fh.get_sid(server, password)
+    sid = fh.get_sid(server, username, password)
     data = fh.get_page(server, sid, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
@@ -48,6 +53,7 @@ def get_uptime():
 
 
 def print_config():
+    print "host_name %s" % boxname
     print "graph_title AVM Fritz!Box Uptime"
     print "graph_args --base 1000 -l 0"
     print 'graph_vlabel uptime in days'
