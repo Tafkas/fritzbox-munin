@@ -25,7 +25,7 @@ from xml.dom import minidom
 USER_AGENT = "Mozilla/5.0 (U; Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
 
 
-def get_sid(server, password, port=80):
+def get_sid(server, username, password, port=80):
     """Obtains the sid after login into the fritzbox"""
     conn = httplib.HTTPConnection(server + ':' + str(port))
 
@@ -58,7 +58,7 @@ def get_sid(server, password, port=80):
                "Content-Type": "application/x-www-form-urlencoded",
                "User-Agent": USER_AGENT}
 
-    login_page = "/login_sid.lua?&response=" + response_bf
+    login_page = "/login_sid.lua?username=" + username + "&response=" + response_bf
     conn.request("GET", login_page, '', headers)
     response = conn.getresponse()
     data = response.read()
@@ -69,6 +69,7 @@ def get_sid(server, password, port=80):
         sid = re.search("<SID>(.*?)</SID>", data).group(1)
         if sid == "0000000000000000":
             print "ERROR - No SID received because of invalid password"
+
             sys.exit(0)
         return sid
 
