@@ -76,3 +76,19 @@ If you are using FRITZ!OS 6.30 use the master branch.
   
   Do not forget to restart the munin-node daemon as described in step
   3 of the installation instructions above.
+
+## Multiple Fritz!Boxes
+
+  To generate graphs for additional boxes create new symbolic links (like in step 3) but chgange the first part of th
+  e.g.: ```ln -s /usr/share/munin/plugins/fritzbox_uptime.py /etc/munin/plugins/freetz_uptime```
+
+  And create a new section in ```/etc/munin/plugin-cond.d/munin-node``` with the alternative name.
+
+```
+[freetz_*]
+env.fritzbox_ip <ip_address_to_your_second_fritzbox>
+env.fritzbox_username <fritzbox_username>
+env.fritzbox_password <fritzbox_password>
+```
+
+Restart the munin-node daemon.
