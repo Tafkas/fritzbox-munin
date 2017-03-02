@@ -33,7 +33,7 @@ def get_uptime():
     username = os.environ['fritzbox_username']
     password = os.environ['fritzbox_password']
 
-    sid = fh.get_sid(server, username, username, password)
+    sid = fh.get_sid(server, username, password)
     data = fh.get_page(server, sid, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
