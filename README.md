@@ -63,6 +63,7 @@ If you are using FRITZ!OS 6.30 use the master branch.
     
         [fritzbox_*]  
         env.fritzbox_ip <ip_address_to_your_fritzbox>  
+        env.fritzbox_username <fritzbox_username>
         env.fritzbox_password <fritzbox_password>  
 
 3. Create symbolic links to /etc/munin/plugins.
