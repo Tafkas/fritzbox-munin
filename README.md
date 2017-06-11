@@ -6,7 +6,17 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
  - opening an issue
  - submitting a pull request
- 
+
+ So far the following models (running FRITZ!OS 06.83) have been confirmed working:
+
+ - [FRITZ!Box 7362 SL](http://geni.us/fTyoY)
+ - [FRITZ!Box 7390](http://geni.us/BlAP)
+ - [FRITZ!Box 7430](http://geni.us/BlAP)
+ - [FRITZ!Box 7490](http://geni.us/fTyoY)
+ - [FRITZ!Box 7580](http://geni.us/yUYyQTE)
+
+ If you are still running Fritz!OS 6.30 check out the [releases section](https://github.com/Tafkas/fritzbox-munin/releases/tag/6.30.1).
+
 ## Introduction
 
    These python scripts are [Munin](http://munin-monitoring.org) plugins for monitoring the [Fritz!Box](http://avm.de/produkte/fritzbox/) router by AVM.
