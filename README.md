@@ -1,7 +1,11 @@
 # fritzbox-munin
 
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7362 SL](http://geni.us/fTyoY)(Amazon link) running FRITZ!OS 06.80. This script also only works if the language 
-of the Fritz!Box is set to German.
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7362 SL](http://geni.us/fTyoY)(Amazon link) running FRITZ!OS 06.83. This script also only works if the language of the Fritz!Box is set to German.
+
+If you are using the scripts on a different Fritz!Box model please let me know by
+
+ - opening an issue
+ - submitting a pull request
  
 ## Introduction
 
