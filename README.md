@@ -1,6 +1,5 @@
 # fritzbox-munin
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a FRITZ!Box 7362 SL running FRITZ!OS 06.30.
-If you are using the current versio of FRITZ!OS checkout the experimental fritzos6.5 branch.
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7362 SL](http://geni.us/fTyoY)(Amazon link) running FRITZ!OS 06.30.
  
 ## Introduction
 
@@ -69,5 +68,4 @@ If you are using the current versio of FRITZ!OS checkout the experimental fritzo
 
 ## Environment Settings
   
-  Do not forget to restart the munin-node daemon as described in step
-  3 of the installation instructions above.
+  Do not forget to restart the munin-node daemon as described in step 3 of the installation instructions above.
