@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.83.2
+*2017-09-05*
+
+- Support for German and English user interface (by: [@bobvandevijver](https://github.com/bobvandevijver))
+- Support for running Fritzbox as separate host (by: [@bobvandevijver](https://github.com/bobvandevijver))
+- Make maximum download and upload optional by config (by: [@bobvandevijver](https://github.com/bobvandevijver))
+
 ## 6.83.1
 *2017-06-11*
 
