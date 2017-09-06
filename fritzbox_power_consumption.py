@@ -82,6 +82,8 @@ def print_config():
     print "usb.min 0"
     print "usb.max 100"
     print "usb.info Fritzbox usb devices power consumption"
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == '__main__':

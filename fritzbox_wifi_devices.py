@@ -52,6 +52,8 @@ def print_config():
     print 'wifi.type GAUGE'
     print 'wifi.graph LINE1'
     print 'wifi.info Wifi Connections on 2.4 & 5 Ghz'
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == '__main__':
