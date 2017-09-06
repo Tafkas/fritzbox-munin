@@ -19,10 +19,11 @@
 import os
 import re
 import sys
+
 import fritzbox_helper as fh
 
 locale = os.environ.get('locale', 'de')
-patternLoc = {"de":"(\d+) WLAN", "en":"(\d+) wireless LAN"}
+patternLoc = {"de": "(\d+) WLAN", "en": "(\d+) wireless LAN"}
 
 PAGE = '/system/energy.lua'
 pattern = re.compile(patternLoc[locale])

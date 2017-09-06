@@ -19,14 +19,15 @@
 import os
 import re
 import sys
+
 import fritzbox_helper as fh
 
 locale = os.environ.get('locale', 'de')
-patternLoc = {"de":"(\d+)\s(Tag|Stunden|Minuten)", \
-              "en":"(\d+)\s(days|hours|minutes)"}
-dayLoc = {"de":"Tag", "en":"days"}
-hourLoc = {"de":"Stunden", "en":"hours"}
-minutesLoc = {"de":"Minuten", "en":"minutes"}
+patternLoc = {"de": "(\d+)\s(Tag|Stunden|Minuten)",
+              "en": "(\d+)\s(days|hours|minutes)"}
+dayLoc = {"de": "Tag", "en": "days"}
+hourLoc = {"de": "Stunden", "en": "hours"}
+minutesLoc = {"de": "Minuten", "en": "minutes"}
 
 PAGE = '/system/energy.lua'
 pattern = re.compile(patternLoc[locale])
