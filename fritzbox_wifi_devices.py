@@ -21,8 +21,11 @@ import re
 import sys
 import fritzbox_helper as fh
 
+locale = os.environ.get('locale', 'de')
+patternLoc = {"de":"(\d+) WLAN", "en":"(\d+) wireless LAN"}
+
 PAGE = '/system/energy.lua'
-pattern = re.compile("(\d+) WLAN")
+pattern = re.compile(patternLoc[locale])
 
 
 def get_connected_wifi_devices():
