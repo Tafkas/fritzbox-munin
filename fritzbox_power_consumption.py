@@ -44,7 +44,7 @@ def get_power_consumption():
 def print_config():
     print "graph_title AVM Fritz!Box Power Consumption"
     print "graph_vlabel %"
-    print "graph_category network"
+    print "graph_category system"
     print "graph_order system cpu wifi dsl ab usb"
     print "system.label system"
     print "system.type GAUGE"
