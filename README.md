@@ -1,6 +1,6 @@
 # fritzbox-munin
 
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7362 SL](http://geni.us/fTyoY)(Amazon link) running FRITZ!OS 06.83. This script also only works if the language of the Fritz!Box is set to German (this holds only for the uptime and wifi devices check).
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7362 SL](http://geni.us/fTyoY)(Amazon link) running FRITZ!OS 06.83.
 
 If you are using the scripts on a different Fritz!Box model please let me know by
 
@@ -54,12 +54,12 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
 ## fritzbox\_uptime
 
-  fritzbox\_uptime shows you the uptime in days (requires password)  
+  fritzbox\_uptime shows you the uptime in days (requires password) (language dependant, see below).
   ![http://i.imgur.com/Jr8OibH.png](http://i.imgur.com/Jr8OibH.png)
 
 ## fritzbox\_wifi\_devices
 
-  fritzbox\_wifi\_devices shows you the number of connected wifi clients (requires password)
+  fritzbox\_wifi\_devices shows you the number of connected wifi clients (requires password) (language dependant, see below).
   ![http://i.imgur.com/lqvK1b2.png](http://i.imgur.com/lqvK1b2.png)
   
 
@@ -82,6 +82,18 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 4. Restart the munin-node daemon: `/etc/init.d/munin-node restart`.
 
 5. Done. You should now start to see the charts on the Munin pages.
+
+## Localization
+
+Two scripts depend on the language selected in your fritzbox: the uptime and wifi\_devices. Currently, two locales are
+supported:
+
+1. German: `de` (default)
+2. English: `en`
+
+You can change the used locale by setting an environment variable in your plugin configuration:
+
+    env.locale en
 
 ## Environment Settings
   

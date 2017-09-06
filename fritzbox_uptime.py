@@ -21,8 +21,15 @@ import re
 import sys
 import fritzbox_helper as fh
 
+locale = os.environ.get('locale', 'de')
+patternLoc = {"de":"(\d+)\s(Tag|Stunden|Minuten)", \
+              "en":"(\d+)\s(days|hours|minutes)"}
+dayLoc = {"de":"Tag", "en":"days"}
+hourLoc = {"de":"Stunden", "en":"hours"}
+minutesLoc = {"de":"Minuten", "en":"minutes"}
+
 PAGE = '/system/energy.lua'
-pattern = re.compile("(\d+)\s(Tag|Stunden|Minuten)")
+pattern = re.compile(patternLoc[locale])
 
 
 def get_uptime():
@@ -37,11 +44,11 @@ def get_uptime():
     if matches:
         hours = 0.0
         for m in matches:
-            if m.group(2) == 'Tag':
+            if m.group(2) == dayLoc[locale]:
                 hours += 24 * int(m.group(1))
-            if m.group(2) == "Stunden":
+            if m.group(2) == hourLoc[locale]:
                 hours += int(m.group(1))
-            if m.group(2) == "Minuten":
+            if m.group(2) == minutesLoc[locale]:
                 hours += int(m.group(1)) / 60.0
         uptime = hours / 24
         print "uptime.value %.2f" % uptime
