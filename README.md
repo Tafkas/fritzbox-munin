@@ -9,7 +9,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
  So far the following models (running FRITZ!OS 06.83) have been confirmed working:
 
- - [FRITZ!Box 5490](http://geni.us/ACtUyFt) (running FRITZ!OS 06.84)
+ - [FRITZ!Box 5490](http://geni.us/ACtUyFt) 
  - [FRITZ!Box 7362 SL](http://geni.us/fTyoY)
  - [FRITZ!Box 7390](http://geni.us/BlAP)
  - [FRITZ!Box 7430](http://geni.us/BlAP)
@@ -69,17 +69,17 @@ If you are using the scripts on a different Fritz!Box model please let me know b
     
         pip install fritzconnection
 
-1. Copy all the scripts to =/usr/share/munin/plugins
+1. Copy all the scripts to `/usr/share/munin/plugins`
    
-2. Create entry in /etc/munin/plugin-conf.d/munin-node:  
+2. Create entry in `/etc/munin/plugin-conf.d/munin-node`:  
     
         [fritzbox_*]  
         env.fritzbox_ip <ip_address_to_your_fritzbox>  
         env.fritzbox_password <fritzbox_password>  
 
-3. Create symbolic links to /etc/munin/plugins.
+3. Create symbolic links to `/etc/munin/plugins`.
 
-4. Restart the munin-node daemon: /etc/init.d/munin-node restart.
+4. Restart the munin-node daemon: `/etc/init.d/munin-node restart`.
 
 5. Done. You should now start to see the charts on the Munin pages.
 
