@@ -32,13 +32,14 @@ def print_values():
     up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
     print ('up.value %d' % up_traffic)
 
-    max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-        'NewLayer1DownstreamMaxBitRate']
-    print ('maxdown.value %d' % max_down_traffic)
+    if not os.environ.get('traffic_remove_max'):
+        max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+            'NewLayer1DownstreamMaxBitRate']
+        print ('maxdown.value %d' % max_down_traffic)
 
-    max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-        'NewLayer1UpstreamMaxBitRate']
-    print ('maxup.value %d' % max_up_traffic)
+        max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+            'NewLayer1UpstreamMaxBitRate']
+        print ('maxup.value %d' % max_up_traffic)
 
 
 def print_config():
@@ -61,14 +62,15 @@ def print_config():
     print "up.max 1000000000"
     print "up.negative down"
     print "up.info Traffic of the WAN interface."
-    print "maxdown.label received"
-    print "maxdown.type GAUGE"
-    print "maxdown.graph no"
-    print "maxup.label MAX"
-    print "maxup.type GAUGE"
-    print "maxup.negative maxdown"
-    print "maxup.draw LINE1"
-    print "maxup.info Maximum speed of the WAN interface."
+    if not os.environ.get('traffic_remove_max'):
+        print "maxdown.label received"
+        print "maxdown.type GAUGE"
+        print "maxdown.graph no"
+        print "maxup.label MAX"
+        print "maxup.type GAUGE"
+        print "maxup.negative maxdown"
+        print "maxup.draw LINE1"
+        print "maxup.info Maximum speed of the WAN interface."
 
 
 if __name__ == "__main__":

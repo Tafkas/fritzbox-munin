@@ -26,6 +26,10 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
   fritzbox\_traffic shows you the traffic of the WAN interface (requires fritzconnection)  
   ![http://i.imgur.com/8BwNMOL.png](http://i.imgur.com/8BwNMOL.png)
+
+  If you do not want to show the interface maximum values, add the following to your plugin-configuration:
+
+    env.traffic_remove_max true
   
 ## fritzbox\_connection\_uptime
 
