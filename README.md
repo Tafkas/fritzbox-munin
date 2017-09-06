@@ -105,13 +105,14 @@ You can split the graphs of your fritzbox from the localhost graphs by following
 
 1. Use the following as your host configuration in `/etc/munin/munin.conf`
 
-[home.yourhost.net;server]
-    address 127.0.0.1
-    use_node_name yes
+        [home.yourhost.net;server]
+            address 127.0.0.1
+            use_node_name yes
 
-[home.yourhost.net;fritzbox]
-    address 127.0.0.1
-    use_node_name no
+        
+        [home.yourhost.net;fritzbox]
+            address 127.0.0.1
+            use_node_name no
 
 2. Add the following to your munin-node configuration
 
