@@ -71,6 +71,8 @@ def print_config():
         print "maxup.negative maxdown"
         print "maxup.draw LINE1"
         print "maxup.info Maximum speed of the WAN interface."
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == "__main__":

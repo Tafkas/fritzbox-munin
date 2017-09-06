@@ -50,6 +50,8 @@ def print_config():
     print "temp.graph LINE1"
     print "temp.min 0"
     print "temp.info Fritzbox CPU temperature"
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == '__main__':

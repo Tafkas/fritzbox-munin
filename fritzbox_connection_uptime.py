@@ -38,6 +38,8 @@ def print_config():
     print "graph_category network"
     print "uptime.label uptime"
     print "uptime.draw AREA"
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == "__main__":

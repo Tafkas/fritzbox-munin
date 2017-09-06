@@ -58,6 +58,8 @@ def print_config():
     print "free.label free"
     print "free.type GAUGE"
     print "free.draw STACK"
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == '__main__':

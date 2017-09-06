@@ -50,6 +50,8 @@ def print_config():
     print "cpu.graph AREA"
     print "cpu.min 0"
     print "cpu.info Fritzbox CPU usage"
+    if os.environ.get('host_name'):
+        print "host_name " + os.environ['host_name']
 
 
 if __name__ == '__main__':
