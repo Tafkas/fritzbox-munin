@@ -73,19 +73,21 @@ If you are using the scripts on a different Fritz!Box model please let me know b
     
         pip install fritzconnection
 
-1. Copy all the scripts to `/usr/share/munin/plugins`
+1. Make sure the FritzBox has UPnP status information enabled. (German interface: Heimnetz > Heimnetzübersicht > Netzwerkeinstellungen > Statusinformationen über UPnP übertragen)
+
+2. Copy all the scripts to `/usr/share/munin/plugins`
    
-2. Create entry in `/etc/munin/plugin-conf.d/munin-node`:  
+3. Create entry in `/etc/munin/plugin-conf.d/munin-node`:  
     
         [fritzbox_*]  
         env.fritzbox_ip <ip_address_to_your_fritzbox>  
         env.fritzbox_password <fritzbox_password>  
 
-3. Create symbolic links to `/etc/munin/plugins`.
+4. Create symbolic links to `/etc/munin/plugins`.
 
-4. Restart the munin-node daemon: `/etc/init.d/munin-node restart`.
+5. Restart the munin-node daemon: `/etc/init.d/munin-node restart`.
 
-5. Done. You should now start to see the charts on the Munin pages.
+6. Done. You should now start to see the charts on the Munin pages.
 
 ## Localization
 
