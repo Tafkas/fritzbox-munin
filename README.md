@@ -9,6 +9,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
  So far the following models (running FRITZ!OS 06.83) have been confirmed working:
 
+ - [FRITZ!Box 3370](http://geni.us/zh3U)
  - [FRITZ!Box 5490](http://geni.us/ACtUyFt) 
  - [FRITZ!Box 7362 SL](http://geni.us/fTyoY)
  - [FRITZ!Box 7390](http://geni.us/BlAP)
