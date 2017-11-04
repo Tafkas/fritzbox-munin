@@ -39,8 +39,8 @@ def get_uptime():
     server = os.environ['fritzbox_ip']
     password = os.environ['fritzbox_password']
 
-    sid = fh.get_sid(server, password)
-    data = fh.get_page(server, sid, PAGE)
+    session_id = fh.get_session_id(server, password)
+    data = fh.get_page_content(server, session_id, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
         hours = 0.0
@@ -56,22 +56,22 @@ def get_uptime():
 
 
 def print_config():
-    print "graph_title AVM Fritz!Box Uptime"
-    print "graph_args --base 1000 -l 0"
-    print 'graph_vlabel uptime in days'
-    print "graph_scale no'"
-    print "graph_category system"
-    print "uptime.label uptime"
-    print "uptime.draw AREA"
+    print("graph_title AVM Fritz!Box Uptime")
+    print("graph_args --base 1000 -l 0")
+    print('graph_vlabel uptime in days')
+    print("graph_scale no'")
+    print("graph_category system")
+    print("uptime.label uptime")
+    print("uptime.draw AREA")
     if os.environ.get('host_name'):
-        print "host_name " + os.environ['host_name']
+        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'config':
         print_config()
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print 'yes'
+        print('yes')
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:

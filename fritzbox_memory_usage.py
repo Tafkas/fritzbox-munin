@@ -32,41 +32,41 @@ def get_memory_usage():
     server = os.environ['fritzbox_ip']
     password = os.environ['fritzbox_password']
 
-    sid = fh.get_sid(server, password)
-    data = fh.get_page(server, sid, PAGE)
+    session_id = fh.get_session_id(server, password)
+    data = fh.get_page_content(server, session_id, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
         data = zip(USAGE, [m.group(1) for m in matches])
         for d in data:
-            print'%s.value %s' % (d[0], d[1])
+            print('%s.value %s' % (d[0], d[1]))
 
 
 def print_config():
-    print "graph_title AVM Fritz!Box Memory"
-    print "graph_vlabel %"
-    print "graph_args --base 1000 -r --lower-limit 0 --upper-limit 100"
-    print "graph_category system"
-    print "graph_order strict cache free"
-    print "graph_info This graph shows what the Fritzbox uses memory for."
-    print "graph_scale no"
-    print "strict.label strict"
-    print "strict.type GAUGE"
-    print "strict.draw AREA"
-    print "cache.label cache"
-    print "cache.type GAUGE"
-    print "cache.draw STACK"
-    print "free.label free"
-    print "free.type GAUGE"
-    print "free.draw STACK"
+    print("graph_title AVM Fritz!Box Memory")
+    print("graph_vlabel %")
+    print("graph_args --base 1000 -r --lower-limit 0 --upper-limit 100")
+    print("graph_category system")
+    print("graph_order strict cache free")
+    print("graph_info This graph shows what the Fritzbox uses memory for.")
+    print("graph_scale no")
+    print("strict.label strict")
+    print("strict.type GAUGE")
+    print("strict.draw AREA")
+    print("cache.label cache")
+    print("cache.type GAUGE")
+    print("cache.draw STACK")
+    print("free.label free")
+    print("free.type GAUGE")
+    print("free.draw STACK")
     if os.environ.get('host_name'):
-        print "host_name " + os.environ['host_name']
+        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'config':
         print_config()
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print 'yes'
+        print('yes')
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:

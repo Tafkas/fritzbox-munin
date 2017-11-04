@@ -35,33 +35,33 @@ def get_connected_wifi_devices():
     server = os.environ['fritzbox_ip']
     password = os.environ['fritzbox_password']
 
-    sid = fh.get_sid(server, password)
-    data = fh.get_page(server, sid, PAGE)
+    session_id = fh.get_session_id(server, password)
+    data = fh.get_page_content(server, session_id, PAGE)
     m = re.search(pattern, data)
     if m:
         connected_devices = int(m.group(1))
-        print 'wifi.value %d' % connected_devices
+        print('wifi.value %d' % connected_devices)
 
 
 def print_config():
-    print 'graph_title AVM Fritz!Box Connected Wifi Devices'
-    print 'graph_vlabel Number of devices'
-    print 'graph_args --base 1000'
-    print 'graph_category network'
-    print 'graph_order wifi'
-    print 'wifi.label Wifi Connections on 2.4 & 5 Ghz'
-    print 'wifi.type GAUGE'
-    print 'wifi.graph LINE1'
-    print 'wifi.info Wifi Connections on 2.4 & 5 Ghz'
+    print('graph_title AVM Fritz!Box Connected Wifi Devices')
+    print('graph_vlabel Number of devices')
+    print('graph_args --base 1000')
+    print('graph_category network')
+    print('graph_order wifi')
+    print('wifi.label Wifi Connections on 2.4 & 5 Ghz')
+    print('wifi.type GAUGE')
+    print('wifi.graph LINE1')
+    print('wifi.info Wifi Connections on 2.4 & 5 Ghz')
     if os.environ.get('host_name'):
-        print "host_name " + os.environ['host_name']
+        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'config':
         print_config()
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print 'yes'
+        print('yes')
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
