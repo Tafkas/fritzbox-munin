@@ -70,9 +70,10 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
 ## Installation & Configuration 
 
-0. Pre-requesites for the fritzbox\_traffic and fritzbox\_uptime plugins is the [fritzconnection](https://pypi.python.org/pypi/fritzconnection) package. To install it  
+0. Pre-requesites for the fritzbox\_traffic and fritzbox\_uptime plugins are the [fritzconnection](https://pypi.python.org/pypi/fritzconnection) and [requests](https://pypi.python.org/pypi/requests) package. To install it  
     
         pip install fritzconnection
+        pip install requests
 
 1. Make sure the FritzBox has UPnP status information enabled. (German interface: Heimnetz > Heimnetzübersicht > Netzwerkeinstellungen > Statusinformationen über UPnP übertragen)
 
