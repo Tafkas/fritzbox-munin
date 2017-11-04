@@ -14,80 +14,94 @@
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
   #%# capabilities=autoconf
+
+  The initial script was inspired by
+  https://www.linux-tips-and-tricks.de/en/programming/389-read-data-from-a-fritzbox-7390-with-python-and-bash
+  framp at linux-tips-and-tricks dot de
 """
 
 import hashlib
-import httplib
-import re
 import sys
-from xml.dom import minidom
 
-USER_AGENT = "Mozilla/5.0 (U; Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0"
+import requests
+from lxml import etree
+
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0"
 
 
-def get_sid(server, password, port=80):
-    """Obtains the sid after login into the fritzbox"""
-    conn = httplib.HTTPConnection(server + ':' + str(port))
+def get_session_id(server, password, port=80):
+    """Obtains the session id after login into the Fritzbox.
+    See https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID.pdf
+    for deteils (in German).
+
+    :param server: the ip address of the Fritzbox
+    :param password: the password to log into the Fritzbox webinterface
+    :param port: the port the Fritzbox webserver runs on
+    :return: the session id
+    """
 
     headers = {"Accept": "application/xml",
                "Content-Type": "text/plain",
                "User-Agent": USER_AGENT}
 
-    initial_page = '/login_sid.lua'
-    conn.request("GET", initial_page, '', headers)
-    response = conn.getresponse()
-    data = response.read()
-    if response.status != 200:
-        print "%s %s" % (response.status, response.reason)
-        sys.exit(0)
+    url = 'http://{}:{}/login_sid.lua'.format(server, port)
+    try:
+        r = requests.get(url, headers=headers)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        sys.exit(1)
+
+    root = etree.fromstring(r.content)
+    session_id = root.xpath('//SessionInfo/SID/text()')[0]
+    if session_id == "0000000000000000":
+        challenge = root.xpath('//SessionInfo/Challenge/text()')[0]
+        challenge_bf = ('{}-{}'.format(challenge, password)).decode('iso-8859-1').encode('utf-16le')
+        m = hashlib.md5()
+        m.update(challenge_bf)
+        response_bf = '{}-{}'.format(challenge, m.hexdigest().lower())
     else:
-        xml_data = minidom.parseString(data)
-        sid_info = xml_data.getElementsByTagName('SID')
-        sid = sid_info[0].firstChild.data
-        if sid == "0000000000000000":
-            challenge_info = xml_data.getElementsByTagName('Challenge')
-            challenge = challenge_info[0].firstChild.data
-            challenge_bf = (challenge + '-' + password).decode('iso-8859-1').encode('utf-16le')
-            m = hashlib.md5()
-            m.update(challenge_bf)
-            response_bf = challenge + '-' + m.hexdigest().lower()
-        else:
-            return sid
+        return session_id
 
     headers = {"Accept": "text/html,application/xhtml+xml,application/xml",
                "Content-Type": "application/x-www-form-urlencoded",
                "User-Agent": USER_AGENT}
 
-    login_page = "/login_sid.lua?&response=" + response_bf
-    conn.request("GET", login_page, '', headers)
-    response = conn.getresponse()
-    data = response.read()
-    if response.status != 200:
-        print "%s %s" % (response.status, response.reason)
+    url = 'http://{}:{}/login_sid.lua?&response={}'.format(server, port, response_bf)
+    try:
+        r = requests.get(url, headers=headers)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        sys.exit(1)
+
+    root = etree.fromstring(r.content)
+    session_id = root.xpath('//SessionInfo/SID/text()')[0]
+    if session_id == "0000000000000000":
+        print("ERROR - No SID received because of invalid password")
         sys.exit(0)
-    else:
-        sid = re.search("<SID>(.*?)</SID>", data).group(1)
-        if sid == "0000000000000000":
-            print "ERROR - No SID received because of invalid password"
-            sys.exit(0)
-        return sid
+    return session_id
 
 
-def get_page(server, sid, page, port=80):
-    """Fetches a page from the Fritzbox and returns its content"""
-    conn = httplib.HTTPConnection(server + ':' + str(port))
+def get_page_content(server, session_id, page, port=80):
+    """Fetches a page from the Fritzbox and returns its content
+
+    :param server: the ip address of the Fritzbox
+    :param session_id: a valid session id
+    :param page: the page you are regquesting
+    :param port: the port the Fritzbox webserver runs on
+    :return: the content of the page
+    """
 
     headers = {"Accept": "application/xml",
                "Content-Type": "text/plain",
                "User-Agent": USER_AGENT}
 
-    page_with_sid = page + "?sid=" + sid
-    conn.request("GET", page_with_sid, '', headers)
-    response = conn.getresponse()
-    data = response.read()
-    if response.status != 200:
-        print "%s %s" % (response.status, response.reason)
-        print data
-        sys.exit(0)
-    else:
-        return data
+    url = 'http://{}:{}/{}?sid={}'.format(server, port, page, session_id)
+    try:
+        r = requests.get(url, headers=headers)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        sys.exit(1)
+    return r.content
