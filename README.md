@@ -16,6 +16,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
  - [FRITZ!Box 7430](http://geni.us/BlAP)
  - [FRITZ!Box 7490](http://geni.us/fTyoY)
  - [FRITZ!Box 7580](http://geni.us/yUYyQTE)
+ - [FRITZ!Box 7590](http://geni.us/OO2c7S)
 
  If you are still running Fritz!OS 6.30 check out the [releases section](https://github.com/Tafkas/fritzbox-munin/releases/tag/6.30.1).
 
