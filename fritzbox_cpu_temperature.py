@@ -32,7 +32,7 @@ def get_cpu_temperature():
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, (session_id, PAGE))
+    data = fh.get_page_content(server, session_id, PAGE)
 
     m = re.search(pattern, data)
     if m:
