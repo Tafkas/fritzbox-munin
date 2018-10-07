@@ -9,6 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_port [optional port, default: 80]
+  env.fritzbox_user [optionial, if you configured the FritzBox to use user and password]
   env.fritzbox_password [fritzbox password]
   
   This plugin supports the following munin configuration parameters:
@@ -29,11 +31,8 @@ DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
 def get_power_consumption():
     """get the current power consumption usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
-
-    session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
+    session_id = fh.get_session_id()
+    data = fh.get_page_content(session_id, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
         data = zip(DEVICES, [m.group(4) for m in matches])
