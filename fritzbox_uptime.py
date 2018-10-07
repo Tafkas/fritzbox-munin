@@ -9,6 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_port [optional port, default: 80]
+  env.fritzbox_user [optionial, if you configured the FritzBox to use user and password]
   env.fritzbox_password [fritzbox password]
 
   This plugin supports the following munin configuration parameters:
@@ -36,11 +38,8 @@ pattern = re.compile(patternLoc[locale])
 def get_uptime():
     """get the current uptime"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
-
-    session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
+    session_id = fh.get_session_id()
+    data = fh.get_page_content(session_id, PAGE)
     matches = re.finditer(pattern, data)
     if matches:
         hours = 0.0
