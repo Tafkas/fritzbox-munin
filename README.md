@@ -87,7 +87,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
         [fritzbox_*]
         env.fritzbox_ip <ip_address_to_your_fritzbox>
-	env.fritzbox_user <user> # if you do not specify a user authentification done by password only
+        env.fritzbox_user <user> # if you do not specify a user authentification done by password only
         env.fritzbox_password <fritzbox_password>
         env.traffic_remove_max true # if you do not want the possible max values
         host_name fritzbox
