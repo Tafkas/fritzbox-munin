@@ -10,6 +10,7 @@
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
   env.fritzbox_password [fritzbox password]
+  env.fritzbox_username [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -29,22 +30,25 @@ from lxml import etree
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0"
 
 
-def get_session_id(server, password, port=80):
+def get_session_id(server, password, username=None, port=80):
     """Obtains the session id after login into the Fritzbox.
     See https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID.pdf
     for deteils (in German).
 
     :param server: the ip address of the Fritzbox
     :param password: the password to log into the Fritzbox webinterface
+    :param username: (optional) the username with which to log into the Fritzbox webinterface
     :param port: the port the Fritzbox webserver runs on
     :return: the session id
     """
+
+    userpar = '' if username is None else '?username={}'.format(username)
 
     headers = {"Accept": "application/xml",
                "Content-Type": "text/plain",
                "User-Agent": USER_AGENT}
 
-    url = 'http://{}:{}/login_sid.lua'.format(server, port)
+    url = 'http://{}:{}/login_sid.lua{}'.format(server, port, userpar)
     try:
         r = requests.get(url, headers=headers)
         r.raise_for_status()
@@ -67,7 +71,7 @@ def get_session_id(server, password, port=80):
                "Content-Type": "application/x-www-form-urlencoded",
                "User-Agent": USER_AGENT}
 
-    url = 'http://{}:{}/login_sid.lua?&response={}'.format(server, port, response_bf)
+    url = 'http://{}:{}/login_sid.lua?{}&response={}'.format(server, port, userpar[1:], response_bf)
     try:
         r = requests.get(url, headers=headers)
         r.raise_for_status()
