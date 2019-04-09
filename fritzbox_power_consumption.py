@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 """
   fritzbox_power_consumption - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -15,15 +16,19 @@
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
-
+import json
 import os
-import re
 import sys
+
 import fritzbox_helper as fh
 
-PAGE = '/system/energy.lua'
-pattern = re.compile('<td>(.+?)"bar\s(act|fillonly)"(.+?)\s(\d{1,3})\s%')
-DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
+PAGE = 'energy'
+DEVICES = {'FRITZ!Box Gesamtsystem': 'system',
+           'FRITZ!Box Hauptprozessor': 'cpu',
+           'WLAN': 'wifi',
+           'DSL': 'dsl',
+           'analoge FON-Anschlüsse': 'ab',
+           'USB-Geräte': 'usb'}
 
 
 def get_power_consumption():
@@ -33,12 +38,13 @@ def get_power_consumption():
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
-    matches = re.finditer(pattern, data)
-    if matches:
-        data = zip(DEVICES, [m.group(4) for m in matches])
-        for d in data:
-            print('%s.value %s' % (d[0], d[1]))
+    xhr_data = fh.get_xhr_content(server, session_id, PAGE)
+    data = json.loads(xhr_data)
+    for d in data['data']['drain']:
+        try:
+            print('%s.value %s' % (DEVICES[d['name']], d['actPerc']))
+        except KeyError as e:
+            pass
 
 
 def print_config():

@@ -15,7 +15,7 @@
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
-
+import json
 import os
 import re
 import sys
@@ -23,9 +23,10 @@ import sys
 import fritzbox_helper as fh
 
 locale = os.environ.get('locale', 'de')
-patternLoc = {"de": "(\d+) WLAN", "en": "(\d+) wireless LAN"}
+patternLoc = {"de": r"(\d+) WLAN",
+              "en": r"(\d+) wireless LAN"}
 
-PAGE = '/system/energy.lua'
+PAGE = 'energy'
 pattern = re.compile(patternLoc[locale])
 
 
@@ -36,11 +37,14 @@ def get_connected_wifi_devices():
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
-    m = re.search(pattern, data)
-    if m:
-        connected_devices = int(m.group(1))
-        print('wifi.value %d' % connected_devices)
+    xhr_data = fh.get_xhr_content(server, session_id, PAGE)
+    data = json.loads(xhr_data)
+    for d in data['data']['drain']:
+        if d['name'] == 'WLAN':
+            m = re.search(pattern, d['statuses'][-1])
+            if m:
+                connected_devices = int(m.group(1))
+                print('wifi.value %d' % connected_devices)
 
 
 def print_config():

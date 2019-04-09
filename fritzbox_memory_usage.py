@@ -15,15 +15,13 @@
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
-
+import json
 import os
-import re
 import sys
 import fritzbox_helper as fh
 
-PAGE = '/system/ecostat.lua'
-pattern = re.compile('Query[1-3]\s="(\d{1,3})')
-USAGE = ['free', 'cache', 'strict']
+PAGE = 'ecoStat'
+USAGE = ['strict', 'cache', 'free']
 
 
 def get_memory_usage():
@@ -33,12 +31,10 @@ def get_memory_usage():
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
-    matches = re.finditer(pattern, data)
-    if matches:
-        data = zip(USAGE, [m.group(1) for m in matches])
-        for d in data:
-            print('%s.value %s' % (d[0], d[1]))
+    xhr_data = fh.get_xhr_content(server, session_id, PAGE)
+    data = json.loads(xhr_data)
+    for usage in enumerate(USAGE):
+        print('%s.value %s' % (usage[1], data['data']['ramusage']['series'][usage[0]][-1]))
 
 
 def print_config():

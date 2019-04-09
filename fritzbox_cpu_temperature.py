@@ -15,14 +15,12 @@
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
-
+import json
 import os
-import re
 import sys
 import fritzbox_helper as fh
 
-PAGE = '/system/ecostat.lua'
-pattern = re.compile('Query\s=\s"(\d{1,3})')
+PAGE = 'ecoStat'
 
 
 def get_cpu_temperature():
@@ -32,11 +30,9 @@ def get_cpu_temperature():
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
-
-    m = re.search(pattern, data)
-    if m:
-        print('temp.value %d' % (int(m.group(1))))
+    xhr_data = fh.get_xhr_content(server, session_id, PAGE)
+    data = json.loads(xhr_data)
+    print('temp.value %d' % (int(data['data']['cputemp']['series'][0][-1])))
 
 
 def print_config():
@@ -61,7 +57,4 @@ if __name__ == '__main__':
         print('yes')
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
-        try:
-            get_cpu_temperature()
-        except:
-            sys.exit("Couldn't retrieve fritzbox cpu temperature")
+        get_cpu_temperature()

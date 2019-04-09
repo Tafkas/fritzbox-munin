@@ -56,7 +56,7 @@ def get_session_id(server, password, port=80):
     session_id = root.xpath('//SessionInfo/SID/text()')[0]
     if session_id == "0000000000000000":
         challenge = root.xpath('//SessionInfo/Challenge/text()')[0]
-        challenge_bf = ('{}-{}'.format(challenge, password)).decode('iso-8859-1').encode('utf-16le')
+        challenge_bf = ('{}-{}'.format(challenge, password)).encode('utf-16le')
         m = hashlib.md5()
         m.update(challenge_bf)
         response_bf = '{}-{}'.format(challenge, m.hexdigest().lower())
@@ -101,6 +101,36 @@ def get_page_content(server, session_id, page, port=80):
     try:
         r = requests.get(url, headers=headers)
         r.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        sys.exit(1)
+    return r.content
+
+
+def get_xhr_content(server, session_id, page, port=80):
+    """Fetches the xhr content from the Fritzbox and returns its content
+
+    :param server: the ip address of the Fritzbox
+    :param session_id: a valid session id
+    :param page: the page you are regquesting
+    :param port: the port the Fritzbox webserver runs on
+    :return: the content of the page
+    """
+
+    headers = {"Accept": "application/xml",
+               "Content-Type": "application/x-www-form-urlencoded",
+               "User-Agent": USER_AGENT}
+
+    url = 'http://{}:{}/data.lua'.format(server, port)
+    data = {"xhr": 1,
+            "sid": session_id,
+            "lang": "en",
+            "page": page,
+            "xhrId": "all",
+            "no_sidrenew": ""
+            }
+    try:
+        r = requests.post(url, data=data, headers=headers)
     except requests.exceptions.HTTPError as err:
         print(err)
         sys.exit(1)

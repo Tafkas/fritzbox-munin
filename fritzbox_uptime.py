@@ -15,7 +15,7 @@
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
-
+import json
 import os
 import re
 import sys
@@ -23,13 +23,13 @@ import sys
 import fritzbox_helper as fh
 
 locale = os.environ.get('locale', 'de')
-patternLoc = {"de": "(\d+)\s(Tag|Stunden|Minuten)",
-              "en": "(\d+)\s(days|hours|minutes)"}
+patternLoc = {"de": r"(\d+)\s(Tag|Stunden|Minuten)",
+              "en": r"(\d+)\s(days|hours|minutes)"}
 dayLoc = {"de": "Tag", "en": "days"}
 hourLoc = {"de": "Stunden", "en": "hours"}
 minutesLoc = {"de": "Minuten", "en": "minutes"}
 
-PAGE = '/system/energy.lua'
+PAGE = 'energy'
 pattern = re.compile(patternLoc[locale])
 
 
@@ -40,19 +40,22 @@ def get_uptime():
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
-    data = fh.get_page_content(server, session_id, PAGE)
-    matches = re.finditer(pattern, data)
-    if matches:
-        hours = 0.0
-        for m in matches:
-            if m.group(2) == dayLoc[locale]:
-                hours += 24 * int(m.group(1))
-            if m.group(2) == hourLoc[locale]:
-                hours += int(m.group(1))
-            if m.group(2) == minutesLoc[locale]:
-                hours += int(m.group(1)) / 60.0
-        uptime = hours / 24
-        print "uptime.value %.2f" % uptime
+    xhr_data = fh.get_xhr_content(server, session_id, PAGE)
+    data = json.loads(xhr_data)
+    for d in data['data']['drain']:
+        if 'aktiv' in d['statuses']:
+            matches = re.finditer(pattern, d['statuses'])
+            if matches:
+                hours = 0.0
+                for m in matches:
+                    if m.group(2) == dayLoc[locale]:
+                        hours += 24 * int(m.group(1))
+                    if m.group(2) == hourLoc[locale]:
+                        hours += int(m.group(1))
+                    if m.group(2) == minutesLoc[locale]:
+                        hours += int(m.group(1)) / 60.0
+                uptime = hours / 24
+                print("uptime.value %.2f" % uptime)
 
 
 def print_config():
