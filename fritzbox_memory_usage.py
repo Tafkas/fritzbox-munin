@@ -33,8 +33,8 @@ def get_memory_usage():
     session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
-    for usage in enumerate(USAGE):
-        print('%s.value %s' % (usage[1], data['data']['ramusage']['series'][usage[0]][-1]))
+    for i, usage in enumerate(USAGE):
+        print('%s.value %s' % (usage, data['data']['ramusage']['series'][i][-1]))
 
 
 def print_config():

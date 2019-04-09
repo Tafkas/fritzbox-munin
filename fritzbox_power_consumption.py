@@ -23,12 +23,7 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = 'energy'
-DEVICES = {'FRITZ!Box Gesamtsystem': 'system',
-           'FRITZ!Box Hauptprozessor': 'cpu',
-           'WLAN': 'wifi',
-           'DSL': 'dsl',
-           'analoge FON-Anschlüsse': 'ab',
-           'USB-Geräte': 'usb'}
+DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
 
 
 def get_power_consumption():
@@ -40,11 +35,9 @@ def get_power_consumption():
     session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
-    for d in data['data']['drain']:
-        try:
-            print('%s.value %s' % (DEVICES[d['name']], d['actPerc']))
-        except KeyError as e:
-            pass
+    devices = data['data']['drain']
+    for i, device in enumerate(DEVICES):
+        print('%s.value %s' % (device, devices[i]['actPerc']))
 
 
 def print_config():

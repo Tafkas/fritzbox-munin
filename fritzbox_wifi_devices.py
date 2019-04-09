@@ -39,12 +39,10 @@ def get_connected_wifi_devices():
     session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
-    for d in data['data']['drain']:
-        if d['name'] == 'WLAN':
-            m = re.search(pattern, d['statuses'][-1])
-            if m:
-                connected_devices = int(m.group(1))
-                print('wifi.value %d' % connected_devices)
+    m = re.search(pattern, data['data']['drain'][2]['statuses'][-1])
+    if m:
+        connected_devices = int(m.group(1))
+        print('wifi.value %d' % connected_devices)
 
 
 def print_config():
