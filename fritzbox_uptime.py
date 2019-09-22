@@ -10,6 +10,7 @@
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
   env.fritzbox_password [fritzbox password]
+  env.fritzbox_username [optional: fritzbox username]
 
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -39,7 +40,11 @@ def get_uptime():
     server = os.environ['fritzbox_ip']
     password = os.environ['fritzbox_password']
 
-    session_id = fh.get_session_id(server, password)
+    if "fritzbox_username" in os.environ:
+        fritzuser = os.environ['fritzbox_username']
+        session_id = fh.get_session_id(server, password, fritzuser)
+    else:
+        session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     for d in data['data']['drain']:
