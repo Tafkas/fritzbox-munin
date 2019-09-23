@@ -9,8 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.fritzbox_password [fritzbox password]
-  env.fritzbox_username [optional: fritzbox username]
+  env.FRITZ_PASSWORD [fritzbox password]
+  env.FRITZ_USERNAME [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -29,10 +29,10 @@ def get_memory_usage():
     """get the current memory usage"""
 
     server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    password = os.environ['FRITZ_PASSWORD']
 
-    if "fritzbox_username" in os.environ:
-        fritzuser = os.environ['fritzbox_username']
+    if "FRITZ_USERNAME" in os.environ:
+        fritzuser = os.environ['FRITZ_USERNAME']
         session_id = fh.get_session_id(server, password, fritzuser)
     else:
         session_id = fh.get_session_id(server, password)

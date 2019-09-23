@@ -84,7 +84,8 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
         [fritzbox_*]
         env.fritzbox_ip <ip_address_to_your_fritzbox>
-        env.fritzbox_password <fritzbox_password>
+        env.FRITZ_USERNAME <optional: fritzbox username>
+        env.FRITZ_PASSWORD <FRITZ_PASSWORD>
         env.traffic_remove_max true # if you do not want the possible max values
         host_name fritzbox
 
