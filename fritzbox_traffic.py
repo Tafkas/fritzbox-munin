@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_traffic - A munin plugin for Linux to monitor AVM Fritzbox WAN traffic
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -22,9 +22,9 @@ from fritzconnection import FritzConnection
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzConnection(address=os.getenv('fritzbox_ip'))
     except Exception as e:
-        sys.exit("Couldn't get WAN traffic")
+        sys.exit(f"Couldn't get WAN traffic: {e}")
 
     down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
     print('down.value %d' % down_traffic)
@@ -72,7 +72,7 @@ def print_config():
         print("maxup.draw LINE1")
         print("maxup.info Maximum speed of the WAN interface.")
     if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == "__main__":
@@ -83,5 +83,5 @@ if __name__ == "__main__":
     elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
         try:
             print_values()
-        except:
-            sys.exit("Couldn't retrieve fritzbox traffic")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox traffic: {e}")

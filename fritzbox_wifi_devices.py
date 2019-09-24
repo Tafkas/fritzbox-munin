@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_wifi_devices - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -34,11 +34,11 @@ pattern = re.compile(patternLoc[locale])
 def get_connected_wifi_devices():
     """gets the numbrer of currently connected wifi devices"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['FRITZ_PASSWORD']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
     if "FRITZ_USERNAME" in os.environ:
-        fritzuser = os.environ['FRITZ_USERNAME']
+        fritzuser = os.getenv('FRITZ_USERNAME')
         session_id = fh.get_session_id(server, password, fritzuser)
     else:
         session_id = fh.get_session_id(server, password)
@@ -61,7 +61,7 @@ def print_config():
     print('wifi.graph LINE1')
     print('wifi.info Wifi Connections on 2.4 & 5 Ghz')
     if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':
@@ -73,5 +73,5 @@ if __name__ == '__main__':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_connected_wifi_devices()
-        except:
-            sys.exit("Couldn't retrieve connected fritzbox wifi devices")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve connected fritzbox wifi devices: {e}")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_connection_uptime - A munin plugin for Linux to monitor AVM Fritzbox connection uptime
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -22,9 +22,9 @@ from fritzconnection import FritzConnection
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzConnection(address=os.getenv('fritzbox_ip'))
     except Exception as e:
-        sys.exit("Couldn't get connection uptime")
+        sys.exit(f"Couldn't get connection uptime: {e}")
 
     uptime = conn.call_action('WANIPConnection', 'GetStatusInfo')['NewUptime']
     print('uptime.value %.2f' % (int(uptime) / 86400.0))
@@ -39,7 +39,7 @@ def print_config():
     print("uptime.label uptime")
     print("uptime.draw AREA")
     if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == "__main__":
@@ -50,5 +50,5 @@ if __name__ == "__main__":
     elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
         try:
             print_values()
-        except:
-            sys.exit("Couldn't retrieve fritzbox connection uptime")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox connection uptime: {e}")

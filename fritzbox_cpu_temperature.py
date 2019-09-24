@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_cpu_temperature - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -27,11 +27,11 @@ PAGE = 'ecoStat'
 def get_cpu_temperature():
     """get the current cpu temperature"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['FRITZ_PASSWORD']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
     if "FRITZ_USERNAME" in os.environ:
-        fritzuser = os.environ['FRITZ_USERNAME']
+        fritzuser = os.getenv('FRITZ_USERNAME')
         session_id = fh.get_session_id(server, password, fritzuser)
     else:
         session_id = fh.get_session_id(server, password)
@@ -52,7 +52,7 @@ def print_config():
     print("temp.min 0")
     print("temp.info Fritzbox CPU temperature")
     if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':

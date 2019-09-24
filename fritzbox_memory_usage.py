@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_memory_usage - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -28,11 +28,11 @@ USAGE = ['strict', 'cache', 'free']
 def get_memory_usage():
     """get the current memory usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['FRITZ_PASSWORD']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
     if "FRITZ_USERNAME" in os.environ:
-        fritzuser = os.environ['FRITZ_USERNAME']
+        fritzuser = os.getenv('FRITZ_USERNAME')
         session_id = fh.get_session_id(server, password, fritzuser)
     else:
         session_id = fh.get_session_id(server, password)
@@ -60,7 +60,7 @@ def print_config():
     print("free.type GAUGE")
     print("free.draw STACK")
     if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':
@@ -72,5 +72,5 @@ if __name__ == '__main__':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_memory_usage()
-        except:
-            sys.exit("Couldn't retrieve fritzbox memory usage")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox memory usage: {e}")
