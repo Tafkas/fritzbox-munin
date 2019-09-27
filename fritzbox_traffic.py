@@ -56,7 +56,7 @@ def print_config():
     print("down.max 1000000000")
     print("up.label bps")
     print("up.type DERIVE")
-    print("up.draw AREA")
+    print("up.draw LINE")
     print("up.cdef up,8,*")
     print("up.min 0")
     print("up.max 1000000000")
