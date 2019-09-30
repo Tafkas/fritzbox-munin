@@ -32,7 +32,7 @@ pattern = re.compile(patternLoc[locale])
 
 
 def get_connected_wifi_devices():
-    """gets the numbrer of currently connected wifi devices"""
+    """gets the numbrer of currently connected wi-fi devices"""
 
     server = os.getenv('fritzbox_ip')
     password = os.getenv('FRITZ_PASSWORD')
@@ -51,7 +51,11 @@ def get_connected_wifi_devices():
 
 
 def print_config():
-    print('graph_title AVM Fritz!Box Connected Wifi Devices')
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print('graph_title Connected Wi-Fi Devices')
+    else:
+        print('graph_title AVM Fritz!Box Connected Wi-Fi Devices')
     print('graph_vlabel Number of devices')
     print('graph_args --base 1000')
     print('graph_category network')
@@ -60,8 +64,6 @@ def print_config():
     print('wifi.type GAUGE')
     print('wifi.graph LINE1')
     print('wifi.info Wifi Connections on 2.4 & 5 Ghz')
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':

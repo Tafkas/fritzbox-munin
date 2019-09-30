@@ -46,9 +46,13 @@ def get_power_consumption():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box Power Consumption")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Power consumption")
+    else:
+        print("graph_title AVM Fritz!Box Power Consumption")
     print("graph_vlabel %")
-    print("graph_category system")
+    print("graph_category sensors")
     print("graph_order system cpu wifi dsl ab usb")
     print("system.label system")
     print("system.type GAUGE")
@@ -86,8 +90,6 @@ def print_config():
     print("usb.min 0")
     print("usb.max 100")
     print("usb.info Fritzbox usb devices power consumption")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':

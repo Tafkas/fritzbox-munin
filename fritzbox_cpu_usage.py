@@ -41,7 +41,11 @@ def get_cpu_usage():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box CPU usage")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title CPU usage")
+    else :
+        print("graph_title AVM Fritz!Box CPU usage")
     print("graph_vlabel %")
     print("graph_category system")
     print("graph_order cpu")
@@ -51,8 +55,6 @@ def print_config():
     print("cpu.graph AREA")
     print("cpu.min 0")
     print("cpu.info Fritzbox CPU usage")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':

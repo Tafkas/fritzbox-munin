@@ -64,15 +64,17 @@ def get_uptime():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box Uptime")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Uptime")
+    else:
+        print("graph_title AVM Fritz!Box Uptime")
     print("graph_args --base 1000 -l 0")
     print('graph_vlabel uptime in days')
     print("graph_scale no'")
     print("graph_category system")
     print("uptime.label uptime")
     print("uptime.draw AREA")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':

@@ -43,7 +43,11 @@ def print_values():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box WAN traffic")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Uplink traffic")
+    else:
+        print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
     print("graph_vlabel bits in (-) / out (+) per \${graph_period}")
     print("graph_category network")
@@ -71,8 +75,6 @@ def print_config():
         print("maxup.negative maxdown")
         print("maxup.draw LINE1")
         print("maxup.info Maximum speed of the WAN interface.")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == "__main__":

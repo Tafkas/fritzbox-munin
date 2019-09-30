@@ -43,7 +43,11 @@ def get_memory_usage():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box Memory")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Memory usage in percent")
+    else:
+        print("graph_title AVM Fritz!Box Memory")
     print("graph_vlabel %")
     print("graph_args --base 1000 -r --lower-limit 0 --upper-limit 100")
     print("graph_category system")
@@ -59,8 +63,6 @@ def print_config():
     print("free.label free")
     print("free.type GAUGE")
     print("free.draw STACK")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':

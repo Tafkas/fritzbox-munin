@@ -31,6 +31,10 @@ def print_values():
 
 
 def print_config():
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Connection Uptime")
+    else:
     print("graph_title AVM Fritz!Box Connection Uptime")
     print("graph_args --base 1000 -l 0")
     print('graph_vlabel uptime in days')
@@ -38,8 +42,6 @@ def print_config():
     print("graph_category network")
     print("uptime.label uptime")
     print("uptime.draw AREA")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == "__main__":

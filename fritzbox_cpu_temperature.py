@@ -41,7 +41,11 @@ def get_cpu_temperature():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box CPU temperature")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Temperatures")
+    else:
+        print("graph_title AVM Fritz!Box CPU temperature")
     print("graph_vlabel degrees Celsius")
     print("graph_category sensors")
     print("graph_order tmp")
@@ -51,8 +55,6 @@ def print_config():
     print("temp.graph LINE1")
     print("temp.min 0")
     print("temp.info Fritzbox CPU temperature")
-    if os.environ.get('host_name'):
-        print("host_name " + os.getenv('host_name'))
 
 
 if __name__ == '__main__':
