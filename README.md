@@ -76,7 +76,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
         pip install fritzconnection
         pip install requests
 
-2. Make sure the FritzBox has UPnP status information enabled. (German interface: Heimnetz > Heimnetzübersicht > Netzwerkeinstellungen > Statusinformationen über UPnP übertragen)
+2. Make sure the FritzBox has UPnP status information enabled. (web interface: Home Network -> Network -> Network Settings -> Universal Plug & Play (UPnP))
 
 3. Copy all the scripts to `/usr/share/munin/plugins`
 
