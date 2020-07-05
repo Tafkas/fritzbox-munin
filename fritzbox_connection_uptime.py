@@ -3,6 +3,11 @@
   fritzbox_connection_uptime - A munin plugin for Linux to monitor AVM Fritzbox connection uptime
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
+
+  Updated to fritzconnection library version 1.3.1
+  Copyright (C) 2020 Oliver Edelamnn
+  Author: Oliver Edelmann
+
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
   Like Munin, this plugin is licensed under the GNU GPL v2 license
@@ -17,23 +22,23 @@
 import os
 import sys
 
-from fritzconnection import FritzConnection
+from fritzconnection.lib.fritzstatus import FritzStatus
 
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzStatus(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
     except Exception as e:
         sys.exit("Couldn't get connection uptime")
 
-    uptime = conn.call_action('WANIPConnection', 'GetStatusInfo')['NewUptime']
-    print('uptime.value %.2f' % (int(uptime) / 86400.0))
+    uptime = conn.uptime
+    print('uptime.value %.2f' % (int(uptime) / 3600.0))
 
 
 def print_config():
     print("graph_title AVM Fritz!Box Connection Uptime")
     print("graph_args --base 1000 -l 0")
-    print('graph_vlabel uptime in days')
+    print('graph_vlabel uptime in hours')
     print("graph_scale no'")
     print("graph_category network")
     print("uptime.label uptime")

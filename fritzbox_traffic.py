@@ -3,6 +3,11 @@
   fritzbox_traffic - A munin plugin for Linux to monitor AVM Fritzbox WAN traffic
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
+
+  Updated to fritzconnection library version 1.3.1
+  Copyright (C) 2020 Oliver Edelamnn
+  Author: Oliver Edelmann
+
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
   Like Munin, this plugin is licensed under the GNU GPL v2 license
@@ -17,35 +22,32 @@
 import os
 import sys
 
-from fritzconnection import FritzConnection
-
+from fritzconnection.lib.fritzstatus import FritzStatus
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzStatus(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
     except Exception as e:
         sys.exit("Couldn't get WAN traffic")
 
-    down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
-    print('down.value %d' % down_traffic)
+    traffic =  conn.transmission_rate
+    up = traffic[0]
+    down = traffic[1]
+    print('down.value %d' % down)
 
-    up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
-    print('up.value %d' % up_traffic)
+    print('up.value %d' % up)
 
-    if not os.environ.get('traffic_remove_max'):
-        max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-            'NewLayer1DownstreamMaxBitRate']
-        print('maxdown.value %d' % max_down_traffic)
+    if not os.environ.get('traffic_remove_max') or "false" in os.environ.get('traffic_remove_max'):
+        max_traffic = conn.max_bit_rate
+        print('maxdown.value %d' % max_traffic[1])
 
-        max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-            'NewLayer1UpstreamMaxBitRate']
-        print('maxup.value %d' % max_up_traffic)
+        print('maxup.value %d' % max_traffic[0])
 
 
 def print_config():
     print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
-    print("graph_vlabel bits in (-) / out (+) per \${graph_period}")
+    print("graph_vlabel bit in (-) / out (+) per ${graph_period}")
     print("graph_category network")
     print("graph_order down up maxdown maxup")
     print("down.label received")
@@ -62,7 +64,7 @@ def print_config():
     print("up.max 1000000000")
     print("up.negative down")
     print("up.info Traffic of the WAN interface.")
-    if not os.environ.get('traffic_remove_max'):
+    if not os.environ.get('traffic_remove_max') or "false" in os.environ.get('traffic_remove_max'):
         print("maxdown.label received")
         print("maxdown.type GAUGE")
         print("maxdown.graph no")

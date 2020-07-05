@@ -3,6 +3,11 @@
   fritzbox_wifi_devices - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
+
+  Updated to fritzconnection library version 1.3.1
+  Copyright (C) 2020 Oliver Edelamnn
+  Author: Oliver Edelmann
+
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
   Add the following section to your munin-node's plugin configuration:
@@ -15,34 +20,23 @@
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
-import json
 import os
-import re
 import sys
 
-import fritzbox_helper as fh
-
-locale = os.environ.get('locale', 'de')
-patternLoc = {"de": r"(\d+) WLAN",
-              "en": r"(\d+) wireless LAN"}
-
-PAGE = 'energy'
-pattern = re.compile(patternLoc[locale])
+from fritzconnection.lib.fritzwlan import FritzWLAN
 
 
 def get_connected_wifi_devices():
     """gets the numbrer of currently connected wifi devices"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    try:
+        conn = FritzWLAN(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
+    except Exception as e:
+        sys.exit("Couldn't get connection uptime")
 
-    session_id = fh.get_session_id(server, password)
-    xhr_data = fh.get_xhr_content(server, session_id, PAGE)
-    data = json.loads(xhr_data)
-    m = re.search(pattern, data['data']['drain'][2]['statuses'][-1])
-    if m:
-        connected_devices = int(m.group(1))
-        print('wifi.value %d' % connected_devices)
+
+    connected_devices =  conn.host_number
+    print('wifi.value %d' % connected_devices)
 
 
 def print_config():
