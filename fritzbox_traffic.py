@@ -45,9 +45,16 @@ def print_values():
 
 
 def print_config():
+    try:
+        conn = FritzStatus(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
+    except Exception as e:
+        sys.exit("Couldn't get WAN traffic")
+
+    max_traffic = conn.max_bit_rate
+
     print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
-    print("graph_vlabel bit in (-) / out (+) per ${graph_period}")
+    print("graph_vlabel bit up (-) / down (+) per ${graph_period}")
     print("graph_category network")
     print("graph_order down up maxdown maxup")
     print("down.label received")
@@ -55,14 +62,18 @@ def print_config():
     print("down.graph no")
     print("down.cdef down,8,*")
     print("down.min 0")
-    print("down.max 1000000000")
+    print("down.max %d" % max_traffic[1])
+    #print("down.warning %.0f" % (max_traffic[1]*0.6))
+    #print("down.critical %.0f" % (max_traffic[1]*0.8))
     print("up.label bps")
     print("up.type DERIVE")
     print("up.draw AREA")
     print("up.cdef up,8,*")
     print("up.min 0")
-    print("up.max 1000000000")
+    print("up.max %d" % max_traffic[0])
     print("up.negative down")
+    #print("up.warning %.0f" % (max_traffic[0]*0.6))
+    #print("down.critical %.0f" % (max_traffic[0]*0.8))
     print("up.info Traffic of the WAN interface.")
     if not os.environ.get('traffic_remove_max') or "false" in os.environ.get('traffic_remove_max'):
         print("maxdown.label received")
