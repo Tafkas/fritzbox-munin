@@ -24,10 +24,13 @@ import sys
 
 from fritzconnection.lib.fritzstatus import FritzStatus
 
+hostname = os.path.basename(__file__).split('_')[1]
+
 def print_values():
     try:
-        conn = FritzStatus(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
+        conn = FritzStatus(address=hostname, password=os.environ['fritzbox_password'])
     except Exception as e:
+        print(e)
         sys.exit("Couldn't get WAN traffic")
 
     traffic =  conn.transmission_rate
@@ -46,13 +49,13 @@ def print_values():
 
 def print_config():
     try:
-        conn = FritzStatus(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
+        conn = FritzStatus(address=hostname, password=os.environ['fritzbox_password'])
     except Exception as e:
+        print(e)
         sys.exit("Couldn't get WAN traffic")
 
     max_traffic = conn.max_bit_rate
 
-    hostname = os.path.basename(__file__).split('_')[1]
     print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")

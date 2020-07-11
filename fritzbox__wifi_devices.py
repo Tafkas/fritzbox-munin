@@ -25,13 +25,15 @@ import sys
 
 from fritzconnection.lib.fritzwlan import FritzWLAN
 
+hostname = os.path.basename(__file__).split('_')[1]
 
 def get_connected_wifi_devices():
     """gets the numbrer of currently connected wifi devices"""
 
     try:
-        conn = FritzWLAN(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
+        conn = FritzWLAN(address=hostname, password=os.environ['fritzbox_password'])
     except Exception as e:
+        print(e)
         sys.exit("Couldn't get connection uptime")
 
 
@@ -40,7 +42,6 @@ def get_connected_wifi_devices():
 
 
 def print_config():
-    hostname = os.path.basename(__file__).split('_')[1]
     print("host_name %s" % hostname)
     print('graph_title AVM Fritz!Box Connected Wifi Devices')
     print('graph_vlabel Number of devices')

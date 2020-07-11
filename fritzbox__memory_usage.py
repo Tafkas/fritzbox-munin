@@ -22,12 +22,13 @@ import fritzbox_helper as fh
 
 PAGE = 'ecoStat'
 USAGE = ['strict', 'cache', 'free']
+hostname = os.path.basename(__file__).split('_')[1]
 
 
 def get_memory_usage():
     """get the current memory usage"""
 
-    server = os.environ['fritzbox_ip']
+    server = hostname
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
@@ -38,7 +39,6 @@ def get_memory_usage():
 
 
 def print_config():
-    hostname = os.path.basename(__file__).split('_')[1]
     print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box Memory")
     print("graph_vlabel %")
