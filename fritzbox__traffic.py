@@ -31,8 +31,8 @@ def print_values():
         sys.exit("Couldn't get WAN traffic")
 
     traffic =  conn.transmission_rate
-    up = traffic[0]
-    down = traffic[1]
+    up = traffic[0]*8
+    down = traffic[1]*8
     print('down.value %d' % down)
 
     print('up.value %d' % up)
@@ -62,7 +62,7 @@ def print_config():
     print("down.label received")
     print("down.type DERIVE")
     print("down.graph no")
-    print("down.cdef down,8,*")
+    #print("down.cdef down,8,*")
     print("down.min 0")
     print("down.max %d" % max_traffic[1])
     #print("down.warning %.0f" % (max_traffic[1]*0.6))
@@ -70,7 +70,7 @@ def print_config():
     print("up.label bps")
     print("up.type DERIVE")
     print("up.draw AREA")
-    print("up.cdef up,8,*")
+    #print("up.cdef up,8,*")
     print("up.min 0")
     print("up.max %d" % max_traffic[0])
     print("up.negative down")
