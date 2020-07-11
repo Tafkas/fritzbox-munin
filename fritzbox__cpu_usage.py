@@ -20,7 +20,7 @@ import os
 import sys
 import fritzbox_helper as fh
 
-PAGE = 'ecoStat'
+PAGE = { '7': 'ecoStat', '6': 'system/ecostat.lua' }
 
 
 def get_cpu_usage():
@@ -36,6 +36,8 @@ def get_cpu_usage():
 
 
 def print_config():
+    hostname = os.path.basename(__file__).split('_')[1]
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box CPU usage")
     print("graph_vlabel %")
     print("graph_category system")

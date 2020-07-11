@@ -59,6 +59,8 @@ def get_uptime():
 
 
 def print_config():
+    hostname = os.path.basename(__file__).split('_')[1]
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box Uptime")
     print("graph_args --base 1000 -l 0")
     print('graph_vlabel uptime in days')

@@ -52,6 +52,8 @@ def print_config():
 
     max_traffic = conn.max_bit_rate
 
+    hostname = os.path.basename(__file__).split('_')[1]
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
     print("graph_vlabel bit up (-) / down (+) per ${graph_period}")

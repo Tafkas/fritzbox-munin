@@ -41,6 +41,8 @@ def get_power_consumption():
 
 
 def print_config():
+    hostname = os.path.basename(__file__).split('_')[1]
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box Power Consumption")
     print("graph_vlabel %")
     print("graph_category system")
