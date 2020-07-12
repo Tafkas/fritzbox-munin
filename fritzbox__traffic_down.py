@@ -59,7 +59,7 @@ def print_config():
     print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
-    print("graph_vlabel bit up (-) / down (+) per ${graph_period}")
+    print("graph_vlabel bit down per ${graph_period}")
     print("graph_category network")
     print("graph_order down maxdown")
     print("down.label bps")
