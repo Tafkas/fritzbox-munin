@@ -1,25 +1,8 @@
 # fritzbox-munin
 
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7590](http://geni.us/OO2c7S)(Amazon link) running FRITZ!OS 7.00.
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7490](http://geni.us/OO2c7S)(Amazon link) running FRITZ!OS 07.12.
 
 If you are using the scripts on a different Fritz!Box model please let me know by
-
-- opening an issue
-- submitting a pull request
-
- So far the following models (running FRITZ!OS 06.83) have been confirmed working:
-
-- [FRITZ!Box 3370](http://geni.us/zh3U)
-- [FRITZ!Box 5490](http://geni.us/ACtUyFt)
-- [FRITZ!Box 7362 SL](http://geni.us/fTyoY)
-- [FRITZ!Box 7390](http://geni.us/BlAP)
-- [FRITZ!Box 7430](http://geni.us/BlAP)
-- [FRITZ!Box 7490](http://geni.us/fTyoY)
-- [FRITZ!Box 7560](http://geni.us/6gPZNI)
-- [FRITZ!Box 7580](http://geni.us/yUYyQTE)
-- [FRITZ!Box 7590](http://geni.us/OO2c7S)
-
- If you are still running Fritz!OS 6.30 check out the [releases section](https://github.com/Tafkas/fritzbox-munin/releases/tag/6.30.1).
 
 ## Introduction
 
@@ -83,46 +66,48 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 4. Make all the scripts execute able (chmod 755 /usr/share/munin/plugins.*py)
 
 5. Create entry in `/etc/munin/plugin-conf.d/munin-node`:
+  1. only one fritzbox or all fritz boxes use the same password:
 
-  a. only one fritzbox or all fritz boxes use the same password:
-        [fritzbox_*]
+    [fritzbox_*]
+        env.fritzbox_password <fritzbox_password>
+        env.traffic_remove_max true # if you do not want the possible max values
+  
+  2. multible fritz boxes:
+    
+    [fritzbox_<fqdn1>_*]
         env.fritzbox_password <fritzbox_password>
         env.traffic_remove_max true # if you do not want the possible max values
 
-  b. multble fritz boxes:
-        [fritzbox_<fqdn1>_*]
-        env.fritzbox_password <fritzbox_password>
-        env.traffic_remove_max true # if you do not want the possible max values
-
-        [fritzbox_<fqdn2>_*]
+    [fritzbox_<fqdn2>_*]
         env.fritzbox_password <fritzbox_password>
         env.traffic_remove_max true # if you do not want the possible max values
 
 6. Create symbolic link in `/etc/munin/plugins` for `fritzbox_helper.py`.
-  cd /etc/munin/plugins
-  ln -d /usr/share/munin/plugins/fritzbox_helper.py fritzbox_helper.py
+
+       cd /etc/munin/plugins
+       ln -d /usr/share/munin/plugins/fritzbox_helper.py fritzbox_helper.py
 
 7. Create symbolic link in `/etc/munin/plugins` for probes.
-  link `/usr/share/munin/plugins/fritzbox__<probe>.py` to `fritzbox_<fqdn>_<probe>`
+  
+       link `/usr/share/munin/plugins/fritzbox__<probe>.py` to `fritzbox_<fqdn>_<probe>`
 
-  example
-  cd /etc/munin/plugins
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_fritz.box_cpu_usage
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_fritz.box_cpu_temperature  
-  ...
+       example
+         cd /etc/munin/plugins
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_fritz.box_cpu_usage
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_fritz.box_cpu_temperature  
+         ...
 
-  if you have multible fritz box just create multble sets of links with a different fqdn or ip.
+       if you have multible fritz box just create multble sets of links with a different fqdn or ip.
 
-  example
-  cd /etc/munin/plugins
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_fritz.box_cpu_usage
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_box2.fritz.box_cpu_usage
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_192.168.100.1_cpu_usage
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_box2.fritz.box_cpu_temperature  
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_box2.fritz.box_cpu_temperature  
-  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_192.168.100.1_cpu_temperature  
-  ...
-
+       example
+         cd /etc/munin/plugins
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_fritz.box_cpu_usage
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_box2.fritz.box_cpu_usage
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_192.168.100.1_cpu_usage
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_box2.fritz.box_cpu_temperature  
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_box2.fritz.box_cpu_temperature  
+         ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_192.168.100.1_cpu_temperature  
+         ...
 
 8. Restart the munin-node daemon: `systemctl restart munin-node`.
 
