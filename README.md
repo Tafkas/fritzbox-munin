@@ -66,21 +66,21 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 4. Make all the scripts execute able (chmod 755 /usr/share/munin/plugins.*py)
 
 5. Create entry in `/etc/munin/plugin-conf.d/munin-node`:
-  1. only one fritzbox or all fritz boxes use the same password:
+     1. only one fritzbox or all fritz boxes use the same password:
 
-    [fritzbox_*]
-        env.fritzbox_password <fritzbox_password>
-        env.traffic_remove_max true # if you do not want the possible max values
+            [fritzbox_*]
+               env.fritzbox_password <fritzbox_password>
+               env.traffic_remove_max true # if you do not want the possible max values
   
-  2. multible fritz boxes:
+    2. multiple fritz boxes:
     
-    [fritzbox_<fqdn1>_*]
-        env.fritzbox_password <fritzbox_password>
-        env.traffic_remove_max true # if you do not want the possible max values
+           [fritzbox_<fqdn1>_*]
+             env.fritzbox_password <fritzbox_password>
+             env.traffic_remove_max true # if you do not want the possible max values
 
-    [fritzbox_<fqdn2>_*]
-        env.fritzbox_password <fritzbox_password>
-        env.traffic_remove_max true # if you do not want the possible max values
+           [fritzbox_<fqdn2>_*]
+             env.fritzbox_password <fritzbox_password>
+             env.traffic_remove_max true # if you do not want the possible max values
 
 6. Create symbolic link in `/etc/munin/plugins` for `fritzbox_helper.py`.
 
@@ -97,7 +97,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
          ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_fritz.box_cpu_temperature  
          ...
 
-       if you have multible fritz box just create multble sets of links with a different fqdn or ip.
+       if you have multiple fritz box just create multiple sets of links with a different fqdn or ip.
 
        example
          cd /etc/munin/plugins
