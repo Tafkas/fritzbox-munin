@@ -66,13 +66,13 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 4. Make all the scripts execute able (chmod 755 /usr/share/munin/plugins.*py)
 
 5. Create entry in `/etc/munin/plugin-conf.d/munin-node`:
-     1. only one fritzbox or all fritz boxes use the same password:
+     1. only one fritzbox or all fritzboxes use the same password:
 
             [fritzbox_*]
                env.fritzbox_password <fritzbox_password>
                env.traffic_remove_max true # if you do not want the possible max values
   
-    2. multiple fritz boxes:
+    2. multiple fritzboxes:
     
            [fritzbox_<fqdn1>_*]
              env.fritzbox_password <fritzbox_password>
@@ -125,7 +125,7 @@ You can change the used locale by setting an environment variable in your plugin
 
     env.locale en
 
-## Set a group for your fritz boxes
+## Set a group for your fritzboxes
 
 You can group the graphs of your fritzbox:
 
@@ -135,7 +135,7 @@ You can group the graphs of your fritzbox:
             address 127.0.0.1
             use_node_name no
 
-  example:
+        example:
         [Network;fritz.box]
             address 127.0.0.1
             use_node_name no
