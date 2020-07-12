@@ -78,21 +78,55 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
 2. Make sure the FritzBox has UPnP status information enabled. (German interface: Heimnetz > Heimnetzübersicht > Netzwerkeinstellungen > Statusinformationen über UPnP übertragen)
 
-3. Copy all the scripts to `/usr/share/munin/plugins`
+3. Copy all the scripts (*.py) to `/usr/share/munin/plugins`
 
-4. Create entry in `/etc/munin/plugin-conf.d/munin-node`:
+4. Make all the scripts execute able (chmod 755 /usr/share/munin/plugins.*py)
 
+5. Create entry in `/etc/munin/plugin-conf.d/munin-node`:
+
+  a. only one fritzbox or all fritz boxes use the same password:
         [fritzbox_*]
-        env.fritzbox_ip <ip_address_to_your_fritzbox>
         env.fritzbox_password <fritzbox_password>
         env.traffic_remove_max true # if you do not want the possible max values
-        host_name fritzbox
 
-5. Create symbolic links to `/etc/munin/plugins`.
+  b. multble fritz boxes:
+        [fritzbox_<fqdn1>_*]
+        env.fritzbox_password <fritzbox_password>
+        env.traffic_remove_max true # if you do not want the possible max values
 
-6. Restart the munin-node daemon: `/etc/init.d/munin-node restart`.
+        [fritzbox_<fqdn2>_*]
+        env.fritzbox_password <fritzbox_password>
+        env.traffic_remove_max true # if you do not want the possible max values
 
-7. Done. You should now start to see the charts on the Munin pages.
+6. Create symbolic link in `/etc/munin/plugins` for `fritzbox_helper.py`.
+  cd /etc/munin/plugins
+  ln -d /usr/share/munin/plugins/fritzbox_helper.py fritzbox_helper.py
+
+7. Create symbolic link in `/etc/munin/plugins` for probes.
+  link `/usr/share/munin/plugins/fritzbox__<probe>.py` to `fritzbox_<fqdn>_<probe>`
+
+  example
+  cd /etc/munin/plugins
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_fritz.box_cpu_usage
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_fritz.box_cpu_temperature  
+  ...
+
+  if you have multible fritz box just create multble sets of links with a different fqdn or ip.
+
+  example
+  cd /etc/munin/plugins
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_fritz.box_cpu_usage
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_box2.fritz.box_cpu_usage
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_usage.py fritzbox_192.168.100.1_cpu_usage
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_box2.fritz.box_cpu_temperature  
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_box2.fritz.box_cpu_temperature  
+  ln -d /usr/share/munin/plugins/fritzbox__cpu_temperature.py fritzbox_192.168.100.1_cpu_temperature  
+  ...
+
+
+8. Restart the munin-node daemon: `systemctl restart munin-node`.
+
+9. Done. You should now start to see the charts on the Munin pages.
 
 ## Localization
 
@@ -106,26 +140,22 @@ You can change the used locale by setting an environment variable in your plugin
 
     env.locale en
 
-## Different hosts for the fritzbox and your system
+## Set a group for your fritz boxes
 
-You can split the graphs of your fritzbox from the localhost graphs by following the next steps:
+You can group the graphs of your fritzbox:
 
-1. Use the following as your host configuration in `/etc/munin/munin.conf`
+1. Use the following as your host configuration in `/etc/munin/munin.conf` or by creating a file in `/etc/munin/munin-conf.d`
 
-        [home.yourhost.net;server]
-            address 127.0.0.1
-            use_node_name yes
-
-
-        [home.yourhost.net;fritzbox]
+        [<groupname>;<fqdn>]
             address 127.0.0.1
             use_node_name no
 
-2. Add the following to your munin-node configuration
+  example:
+        [Network;fritz.box]
+            address 127.0.0.1
+            use_node_name no
 
-    env.host_name fritzbox
-
-3. Restart your munin-node: `systemctl restart munin-node`
+2. Restart your munin-node: `systemctl restart munin-node`
 
 ## Environment Settings
 
