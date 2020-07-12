@@ -24,11 +24,12 @@ import sys
 
 from fritzconnection.lib.fritzstatus import FritzStatus
 
+hostname = os.path.basename(__file__).split('_')[1]
 
 def print_values():
     try:
-        conn = FritzStatus(address=os.environ['fritzbox_ip'], password=os.environ['fritzbox_password'])
-    except Exception as e:
+        conn = FritzStatus(address=hostname, password=os.environ['fritzbox_password'])
+    except Exception:
         sys.exit("Couldn't get connection uptime")
 
     uptime = conn.uptime
@@ -36,6 +37,7 @@ def print_values():
 
 
 def print_config():
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box Connection Uptime")
     print("graph_args --base 1000 -l 0")
     print('graph_vlabel uptime in hours')

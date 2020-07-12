@@ -21,12 +21,13 @@ import sys
 import fritzbox_helper as fh
 
 PAGE = 'ecoStat'
+hostname = os.path.basename(__file__).split('_')[1]
 
 
 def get_cpu_temperature():
     """get the current cpu temperature"""
 
-    server = os.environ['fritzbox_ip']
+    server = hostname
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
@@ -36,6 +37,7 @@ def get_cpu_temperature():
 
 
 def print_config():
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box CPU temperature")
     print("graph_vlabel degrees Celsius")
     print("graph_category sensors")
