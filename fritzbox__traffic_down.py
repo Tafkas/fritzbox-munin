@@ -3,6 +3,11 @@
   fritzbox_traffic - A munin plugin for Linux to monitor AVM Fritzbox WAN traffic
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
+
+  Updated to fritzconnection library version 1.3.1
+  Copyright (C) 2020 Oliver Edelamnn
+  Author: Oliver Edelmann
+
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
   Like Munin, this plugin is licensed under the GNU GPL v2 license
@@ -17,60 +22,60 @@
 import os
 import sys
 
-from fritzconnection import FritzConnection
+from fritzconnection.lib.fritzstatus import FritzStatus
 
+hostname = os.path.basename(__file__).split('_')[1]
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzStatus(address=hostname, password=os.environ['fritzbox_password'])
     except Exception as e:
+        print(e)
         sys.exit("Couldn't get WAN traffic")
 
-    down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
-    print('down.value %d' % down_traffic)
+    traffic =  conn.transmission_rate
+    up = traffic[0]*8
+    down = traffic[1]*8
+    print('down.value %d' % down)
 
-    up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
-    print('up.value %d' % up_traffic)
+    print('up.value %d' % up)
 
-    if not os.environ.get('traffic_remove_max'):
-        max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-            'NewLayer1DownstreamMaxBitRate']
-        print('maxdown.value %d' % max_down_traffic)
+    if not os.environ.get('traffic_remove_max') or "false" in os.environ.get('traffic_remove_max'):
+        max_traffic = conn.max_bit_rate
+        print('maxdown.value %d' % max_traffic[1])
 
-        max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-            'NewLayer1UpstreamMaxBitRate']
-        print('maxup.value %d' % max_up_traffic)
+        print('maxup.value %d' % max_traffic[0])
 
 
 def print_config():
+    try:
+        conn = FritzStatus(address=hostname, password=os.environ['fritzbox_password'])
+    except Exception as e:
+        print(e)
+        sys.exit("Couldn't get WAN traffic")
+
+    max_traffic = conn.max_bit_rate
+
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
-    print("graph_vlabel bits in (-) / out (+) per \${graph_period}")
+    print("graph_vlabel bit down per ${graph_period}")
     print("graph_category network")
-    print("graph_order down up maxdown maxup")
-    print("down.label received")
-    print("down.type DERIVE")
+    print("graph_order down maxdown")
+    print("down.label bps")
+    print("down.type GAUGE")
+    print("down.draw AREA")
     print("down.graph no")
-    print("down.cdef down,8,*")
     print("down.min 0")
-    print("down.max 1000000000")
-    print("up.label bps")
-    print("up.type DERIVE")
-    print("up.draw AREA")
-    print("up.cdef up,8,*")
-    print("up.min 0")
-    print("up.max 1000000000")
-    print("up.negative down")
-    print("up.info Traffic of the WAN interface.")
-    if not os.environ.get('traffic_remove_max'):
+    print("down.max %d" % max_traffic[1])
+    print("down.warning %.0f" % (max_traffic[1]*0.6))
+    print("down.critical %.0f" % (max_traffic[1]*0.8))
+    print("down.info Traffic of the WAN interface.")
+    if not os.environ.get('traffic_remove_max') or "false" in os.environ.get('traffic_remove_max'):
         print("maxdown.label received")
         print("maxdown.type GAUGE")
         print("maxdown.graph no")
-        print("maxup.label MAX")
-        print("maxup.type GAUGE")
-        print("maxup.negative maxdown")
-        print("maxup.draw LINE1")
-        print("maxup.info Maximum speed of the WAN interface.")
+        print("maxdown.info Maximum down speed of the WAN interface.")
     if os.environ.get('host_name'):
         print("host_name " + os.environ['host_name'])
 

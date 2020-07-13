@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-  fritzbox_wifi_devices - A munin plugin for Linux to monitor AVM Fritzbox
+  fritzbox_cpu_temperature - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
   Like Munin, this plugin is licensed under the GNU GPL v2 license
@@ -17,44 +17,37 @@
 """
 import json
 import os
-import re
 import sys
-
 import fritzbox_helper as fh
 
-locale = os.environ.get('locale', 'de')
-patternLoc = {"de": r"(\d+) WLAN",
-              "en": r"(\d+) wireless LAN"}
-
-PAGE = 'energy'
-pattern = re.compile(patternLoc[locale])
+PAGE = 'ecoStat'
+hostname = os.path.basename(__file__).split('_')[1]
 
 
-def get_connected_wifi_devices():
-    """gets the numbrer of currently connected wifi devices"""
+def get_cpu_temperature():
+    """get the current cpu temperature"""
 
-    server = os.environ['fritzbox_ip']
+    server = hostname
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
-    m = re.search(pattern, data['data']['drain'][2]['statuses'][-1])
-    if m:
-        connected_devices = int(m.group(1))
-        print('wifi.value %d' % connected_devices)
+    print('temp.value %d' % (int(data['data']['cputemp']['series'][0][-1])))
 
 
 def print_config():
-    print('graph_title AVM Fritz!Box Connected Wifi Devices')
-    print('graph_vlabel Number of devices')
-    print('graph_args --base 1000')
-    print('graph_category network')
-    print('graph_order wifi')
-    print('wifi.label Wifi Connections on 2.4 & 5 Ghz')
-    print('wifi.type GAUGE')
-    print('wifi.graph LINE1')
-    print('wifi.info Wifi Connections on 2.4 & 5 Ghz')
+    print("host_name %s" % hostname)
+    print("graph_title AVM Fritz!Box CPU temperature")
+    print("graph_vlabel degrees Celsius")
+    print("graph_category sensors")
+    print("graph_order tmp")
+    print("graph_scale no")
+    print("temp.label CPU temperature")
+    print("temp.type GAUGE")
+    print("temp.graph LINE1")
+    print("temp.min 0")
+    print("temp.info Fritzbox CPU temperature")
     if os.environ.get('host_name'):
         print("host_name " + os.environ['host_name'])
 
@@ -66,7 +59,4 @@ if __name__ == '__main__':
         print('yes')
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
-        try:
-            get_connected_wifi_devices()
-        except:
-            sys.exit("Couldn't retrieve connected fritzbox wifi devices")
+        get_cpu_temperature()

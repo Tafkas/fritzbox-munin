@@ -31,12 +31,13 @@ minutesLoc = {"de": "Minuten", "en": "minutes"}
 
 PAGE = 'energy'
 pattern = re.compile(patternLoc[locale])
+hostname = os.path.basename(__file__).split('_')[1]
 
 
 def get_uptime():
     """get the current uptime"""
 
-    server = os.environ['fritzbox_ip']
+    server = hostname
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
@@ -59,6 +60,7 @@ def get_uptime():
 
 
 def print_config():
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box Uptime")
     print("graph_args --base 1000 -l 0")
     print('graph_vlabel uptime in days')

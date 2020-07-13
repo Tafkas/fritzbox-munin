@@ -24,12 +24,12 @@ import fritzbox_helper as fh
 
 PAGE = 'energy'
 DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
-
+hostname = os.path.basename(__file__).split('_')[1]
 
 def get_power_consumption():
     """get the current power consumption usage"""
 
-    server = os.environ['fritzbox_ip']
+    server = hostname
     password = os.environ['fritzbox_password']
 
     session_id = fh.get_session_id(server, password)
@@ -41,6 +41,7 @@ def get_power_consumption():
 
 
 def print_config():
+    print("host_name %s" % hostname)
     print("graph_title AVM Fritz!Box Power Consumption")
     print("graph_vlabel %")
     print("graph_category system")
