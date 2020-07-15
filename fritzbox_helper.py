@@ -49,6 +49,7 @@ def get_session_id(server, password, port=80):
         print(err)
         sys.exit(1)
 
+    params = {}
     root = etree.fromstring(r.content)
     session_id = root.xpath('//SessionInfo/SID/text()')[0]
     if session_id == "0000000000000000":
@@ -57,15 +58,16 @@ def get_session_id(server, password, port=80):
         m = hashlib.md5()
         m.update(challenge_bf)
         response_bf = '{}-{}'.format(challenge, m.hexdigest().lower())
+        params['response'] = response_bf
     else:
         return session_id
 
     headers = {"Accept": "text/html,application/xhtml+xml,application/xml",
                "Content-Type": "application/x-www-form-urlencoded"}
 
-    url = 'http://{}:{}/login_sid.lua?&response={}'.format(server, port, response_bf)
+    url = 'http://{}:{}/login_sid.lua'.format(server, port)
     try:
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, params=params)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
         print(err)
@@ -91,10 +93,11 @@ def get_page_content(server, session_id, page, port=80):
 
     headers = {"Accept": "application/xml",
                "Content-Type": "text/plain"}
+    params = {"sid": session_id}
 
-    url = 'http://{}:{}/{}?sid={}'.format(server, port, page, session_id)
+    url = 'http://{}:{}/{}'.format(server, port, page)
     try:
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, params=params)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
         print(err)
