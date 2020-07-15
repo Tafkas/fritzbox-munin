@@ -122,7 +122,7 @@ def get_page_content(server, session_id, page, port=0, tls=False):
     return r.content
 
 
-def get_xhr_content(server, session_id, page=None, port=0, tls=False):
+def get_xhr_content(server, session_id, page=None, port=0, tls=False, data={}):
     """Fetches the xhr content from the Fritzbox and returns its content
 
     :param server: the ip address of the Fritzbox
@@ -137,12 +137,13 @@ def get_xhr_content(server, session_id, page=None, port=0, tls=False):
                "Content-Type": "application/x-www-form-urlencoded"}
 
     url = '{}/data.lua'.format(base_uri)
-    data = {"xhr": 1,
+    data.update({
+            "xhr": 1,
             "sid": session_id,
             "lang": "en",
             "xhrId": "all",
             "no_sidrenew": ""
-            }
+            })
 
     if page is not None:
         data["page"] = page
