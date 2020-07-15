@@ -26,8 +26,6 @@ import sys
 import requests
 from lxml import etree
 
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0"
-
 
 def get_session_id(server, password, port=80):
     """Obtains the session id after login into the Fritzbox.
@@ -41,8 +39,7 @@ def get_session_id(server, password, port=80):
     """
 
     headers = {"Accept": "application/xml",
-               "Content-Type": "text/plain",
-               "User-Agent": USER_AGENT}
+               "Content-Type": "text/plain"}
 
     url = 'http://{}:{}/login_sid.lua'.format(server, port)
     try:
@@ -64,8 +61,7 @@ def get_session_id(server, password, port=80):
         return session_id
 
     headers = {"Accept": "text/html,application/xhtml+xml,application/xml",
-               "Content-Type": "application/x-www-form-urlencoded",
-               "User-Agent": USER_AGENT}
+               "Content-Type": "application/x-www-form-urlencoded"}
 
     url = 'http://{}:{}/login_sid.lua?&response={}'.format(server, port, response_bf)
     try:
@@ -94,8 +90,7 @@ def get_page_content(server, session_id, page, port=80):
     """
 
     headers = {"Accept": "application/xml",
-               "Content-Type": "text/plain",
-               "User-Agent": USER_AGENT}
+               "Content-Type": "text/plain"}
 
     url = 'http://{}:{}/{}?sid={}'.format(server, port, page, session_id)
     try:
@@ -118,8 +113,7 @@ def get_xhr_content(server, session_id, page, port=80):
     """
 
     headers = {"Accept": "application/xml",
-               "Content-Type": "application/x-www-form-urlencoded",
-               "User-Agent": USER_AGENT}
+               "Content-Type": "application/x-www-form-urlencoded"}
 
     url = 'http://{}:{}/data.lua'.format(server, port)
     data = {"xhr": 1,
