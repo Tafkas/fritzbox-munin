@@ -27,7 +27,16 @@ import requests
 from lxml import etree
 
 
-def get_session_id(server, password, port=80, username=None):
+def get_base_uri(host, port=0, tls=False):
+    DEFAULT_PORTS = (80, 443)
+    SCHEMES = ('http', 'https')
+    if port and port != DEFAULT_PORTS[tls]:
+        return '{}://{}:{}'.format(SCHEMES[tls], host, port)
+    else:
+        return '{}://{}'.format(SCHEMES[tls], host)
+
+
+def get_session_id(server, password, port=0, tls=False, username=None):
     """Obtains the session id after login into the Fritzbox.
     See https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID.pdf
     for deteils (in German).
@@ -38,14 +47,16 @@ def get_session_id(server, password, port=80, username=None):
     :return: the session id
     """
 
+    base_uri = get_base_uri(server, port, tls)
     headers = {"Accept": "application/xml",
                "Content-Type": "text/plain"}
 
-    url = 'http://{}:{}/login_sid.lua'.format(server, port)
+    url = '{}/login_sid.lua'.format(base_uri)
     try:
         r = requests.get(url, headers=headers)
         r.raise_for_status()
-    except requests.exceptions.HTTPError as err:
+    except (requests.exceptions.HTTPError,
+            requests.exceptions.SSLError) as err:
         print(err)
         sys.exit(1)
 
@@ -68,11 +79,12 @@ def get_session_id(server, password, port=80, username=None):
     headers = {"Accept": "text/html,application/xhtml+xml,application/xml",
                "Content-Type": "application/x-www-form-urlencoded"}
 
-    url = 'http://{}:{}/login_sid.lua'.format(server, port)
+    url = '{}/login_sid.lua'.format(base_uri)
     try:
         r = requests.get(url, headers=headers, params=params)
         r.raise_for_status()
-    except requests.exceptions.HTTPError as err:
+    except (requests.exceptions.HTTPError,
+            requests.exceptions.SSLError) as err:
         print(err)
         sys.exit(1)
 
@@ -84,7 +96,7 @@ def get_session_id(server, password, port=80, username=None):
     return session_id
 
 
-def get_page_content(server, session_id, page, port=80):
+def get_page_content(server, session_id, page, port=0, tls=False):
     """Fetches a page from the Fritzbox and returns its content
 
     :param server: the ip address of the Fritzbox
@@ -94,21 +106,23 @@ def get_page_content(server, session_id, page, port=80):
     :return: the content of the page
     """
 
+    base_uri = get_base_uri(server, port, tls)
     headers = {"Accept": "application/xml",
                "Content-Type": "text/plain"}
     params = {"sid": session_id}
 
-    url = 'http://{}:{}/{}'.format(server, port, page)
+    url = '{}/{}'.format(base_uri, page)
     try:
         r = requests.get(url, headers=headers, params=params)
         r.raise_for_status()
-    except requests.exceptions.HTTPError as err:
+    except (requests.exceptions.HTTPError,
+            requests.exceptions.SSLError) as err:
         print(err)
         sys.exit(1)
     return r.content
 
 
-def get_xhr_content(server, session_id, page, port=80):
+def get_xhr_content(server, session_id, page, port=0, tls=False):
     """Fetches the xhr content from the Fritzbox and returns its content
 
     :param server: the ip address of the Fritzbox
@@ -118,10 +132,11 @@ def get_xhr_content(server, session_id, page, port=80):
     :return: the content of the page
     """
 
+    base_uri = get_base_uri(server, port, tls)
     headers = {"Accept": "application/xml",
                "Content-Type": "application/x-www-form-urlencoded"}
 
-    url = 'http://{}:{}/data.lua'.format(server, port)
+    url = '{}/data.lua'.format(base_uri)
     data = {"xhr": 1,
             "sid": session_id,
             "lang": "en",
@@ -131,7 +146,8 @@ def get_xhr_content(server, session_id, page, port=80):
             }
     try:
         r = requests.post(url, data=data, headers=headers)
-    except requests.exceptions.HTTPError as err:
+    except (requests.exceptions.HTTPError,
+            requests.exceptions.SSLError) as err:
         print(err)
         sys.exit(1)
     return r.content
