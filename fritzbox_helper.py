@@ -27,7 +27,7 @@ import requests
 from lxml import etree
 
 
-def get_session_id(server, password, port=80):
+def get_session_id(server, password, port=80, username=None):
     """Obtains the session id after login into the Fritzbox.
     See https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID.pdf
     for deteils (in German).
@@ -61,6 +61,9 @@ def get_session_id(server, password, port=80):
         params['response'] = response_bf
     else:
         return session_id
+
+    if username is not None:
+        params['username'] = username
 
     headers = {"Accept": "text/html,application/xhtml+xml,application/xml",
                "Content-Type": "application/x-www-form-urlencoded"}
