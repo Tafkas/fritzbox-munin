@@ -57,7 +57,7 @@ def print_config():
     max_traffic = conn.max_bit_rate
 
     print("host_name %s" % hostname)
-    print("graph_title AVM Fritz!Box WAN traffic")
+    print("graph_title AVM Fritz!Box WAN traffic (send)")
     print("graph_args --base 1000")
     print("graph_vlabel bit up per ${graph_period}")
     print("graph_category network")
@@ -66,9 +66,9 @@ def print_config():
     print("up.type GAUGE")
     print("up.draw AREA")
     print("up.min 0")
-    print("up.max %d" % max_traffic[1])
-    print("up.warning %.0f" % (max_traffic[1]*0.6))
-    print("up.critical %.0f" % (max_traffic[1]*0.8))
+    print("up.max %d" % max_traffic[0])
+    print("up.warning %.0f" % (max_traffic[0]*0.6))
+    print("up.critical %.0f" % (max_traffic[0]*0.8))
     print("up.info Traffic of the WAN interface.")
     if not os.environ.get('traffic_remove_max') or "false" in os.environ.get('traffic_remove_max'):
         print("maxup.label MAX")
