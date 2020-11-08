@@ -21,23 +21,37 @@ from fritzconnection import FritzConnection
 
 
 def print_values():
+    server = os.environ['fritzbox_ip']
+    if 'fritzbox_port' in os.environ :
+        port = os.environ['fritzbox_port']
+    else :
+        port = None
+    if 'fritzbox_user' in os.environ :
+        user = os.environ['fritzbox_user']
+    else :
+        user = None
+    if 'fritzbox_password' in os.environ :
+        password = os.environ['fritzbox_password']
+    else:
+        password = None
+
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzConnection(address=os.environ['fritzbox_ip'], port=port, user=user, password=password)
     except Exception as e:
         sys.exit("Couldn't get WAN traffic")
 
-    down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
+    down_traffic = conn.call_action('WANCommonIFC', 'GetTotalBytesReceived')['NewTotalBytesReceived']
     print('down.value %d' % down_traffic)
 
-    up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
+    up_traffic = conn.call_action('WANCommonIFC', 'GetTotalBytesSent')['NewTotalBytesSent']
     print('up.value %d' % up_traffic)
 
     if not os.environ.get('traffic_remove_max'):
-        max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+        max_down_traffic = conn.call_action('WANCommonIFC', 'GetCommonLinkProperties')[
             'NewLayer1DownstreamMaxBitRate']
         print('maxdown.value %d' % max_down_traffic)
 
-        max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
+        max_up_traffic = conn.call_action('WANCommonIFC', 'GetCommonLinkProperties')[
             'NewLayer1UpstreamMaxBitRate']
         print('maxup.value %d' % max_up_traffic)
 

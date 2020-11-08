@@ -19,12 +19,11 @@
 """
 
 import os
-import re
 import sys
 import fritzbox_helper as fh
+import json
 
-PAGE = '/system/ecostat.lua'
-pattern = re.compile('Query[1-3]\s="(\d{1,3})')
+PAGE = 'ecoStat'
 USAGE = ['free', 'cache', 'strict']
 
 
@@ -32,12 +31,10 @@ def get_memory_usage():
     """get the current memory usage"""
 
     session_id = fh.get_session_id()
-    data = fh.get_page_content(session_id, PAGE)
-    matches = re.finditer(pattern, data)
-    if matches:
-        data = zip(USAGE, [m.group(1) for m in matches])
-        for d in data:
-            print('%s.value %s' % (d[0], d[1]))
+    xhr_data = fh.get_xhr_content(session_id, PAGE)
+    data = json.loads(xhr_data)
+    for i, usage in enumerate(USAGE):
+        print('%s.value %s' % (usage, data['data']['ramusage']['series'][i][-1]))
 
 
 def print_config():

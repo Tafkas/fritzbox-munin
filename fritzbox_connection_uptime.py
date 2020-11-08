@@ -21,12 +21,26 @@ from fritzconnection import FritzConnection
 
 
 def print_values():
-    try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
-    except Exception as e:
-        sys.exit("Couldn't get connection uptime")
+    server = os.environ['fritzbox_ip']
+    if 'fritzbox_port' in os.environ :
+        port = os.environ['fritzbox_port']
+    else :
+        port = None
+    if 'fritzbox_user' in os.environ :
+        user = os.environ['fritzbox_user']
+    else :
+        user = None
+    if 'fritzbox_password' in os.environ :
+        password = os.environ['fritzbox_password']
+    else:
+        password = None
 
-    uptime = conn.call_action('WANIPConnection', 'GetStatusInfo')['NewUptime']
+    try:
+        conn = FritzConnection(address=server, port=port, user=user, password=password)
+    except Exception as e:
+        sys.exit("Couldn't get connection uptime", e)
+
+    uptime = conn.call_action('WANIPConn', 'GetStatusInfo')['NewUptime']
     print('uptime.value %.2f' % (int(uptime) / 86400.0))
 
 
@@ -48,7 +62,7 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
         print("yes")  # Some docs say it'll be called with fetch, some say no arg at all
     elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
-        try:
+        try: 
             print_values()
         except:
             sys.exit("Couldn't retrieve fritzbox connection uptime")

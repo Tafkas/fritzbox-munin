@@ -19,24 +19,20 @@
 """
 
 import os
-import re
 import sys
 import fritzbox_helper as fh
+import json
 
-PAGE = '/system/ecostat.lua'
-pattern = re.compile('Query1\s=\s"(\d{1,3})')
+PAGE = 'ecoStat'
 
 
 def get_cpu_usage():
     """get the current cpu usage"""
 
     session_id = fh.get_session_id()
-    data = fh.get_page_content(session_id, PAGE)
-
-    m = re.search(pattern, data)
-    if m:
-        print('cpu.value %d' % (int(m.group(1))))
-
+    xhr_data = fh.get_xhr_content(session_id, PAGE)
+    data = json.loads(xhr_data)
+    print('cpu.value %d' % (int(data['data']['cpuutil']['series'][0][-1])))
 
 def print_config():
     print("graph_title AVM Fritz!Box CPU usage")
@@ -50,7 +46,7 @@ def print_config():
     print("cpu.min 0")
     print("cpu.info Fritzbox CPU usage")
     if os.environ.get('host_name'):
-        print "host_name " + os.environ['host_name']
+        print ("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':

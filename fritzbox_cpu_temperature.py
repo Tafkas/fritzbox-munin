@@ -19,24 +19,21 @@
 """
 
 import os
-import re
 import sys
 import fritzbox_helper as fh
+import json
 
-PAGE = '/system/ecostat.lua'
-pattern = re.compile('Query\s=\s"(\d{1,3})')
+PAGE = 'ecoStat'
 
 
 def get_cpu_temperature():
     """get the current cpu temperature"""
 
     session_id = fh.get_session_id()
-    data = fh.get_page_content(session_id, PAGE)
-
-    m = re.search(pattern, data)
-    if m:
-        print('temp.value %d' % (int(m.group(1))))
-
+    xhr_data = fh.get_xhr_content(session_id, PAGE)
+    data = json.loads(xhr_data)
+    print('temp.value %d' % (int(data['data']['cputemp']['series'][0][-1])))
+ 
 
 def print_config():
     print("graph_title AVM Fritz!Box CPU temperature")

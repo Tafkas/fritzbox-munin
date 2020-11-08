@@ -19,12 +19,11 @@
 """
 
 import os
-import re
 import sys
 import fritzbox_helper as fh
+import json
 
-PAGE = '/system/energy.lua'
-pattern = re.compile('<td>(.+?)"bar\s(act|fillonly)"(.+?)\s(\d{1,3})\s%')
+PAGE = 'energy'
 DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
 
 
@@ -32,12 +31,11 @@ def get_power_consumption():
     """get the current power consumption usage"""
 
     session_id = fh.get_session_id()
-    data = fh.get_page_content(session_id, PAGE)
-    matches = re.finditer(pattern, data)
-    if matches:
-        data = zip(DEVICES, [m.group(4) for m in matches])
-        for d in data:
-            print('%s.value %s' % (d[0], d[1]))
+    xhr_data = fh.get_xhr_content(session_id, PAGE)
+    data = json.loads(xhr_data)
+    devices = data['data']['drain']
+    for i, device in enumerate(DEVICES):
+        print('%s.value %s' % (device, devices[i]['actPerc']))
 
 
 def print_config():

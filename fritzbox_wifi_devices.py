@@ -24,10 +24,12 @@ import sys
 
 import fritzbox_helper as fh
 
+import json
+
 locale = os.environ.get('locale', 'de')
 patternLoc = {"de": "(\d+) WLAN", "en": "(\d+) wireless LAN"}
 
-PAGE = '/system/energy.lua'
+PAGE = 'energy'
 pattern = re.compile(patternLoc[locale])
 
 
@@ -35,12 +37,13 @@ def get_connected_wifi_devices():
     """gets the numbrer of currently connected wifi devices"""
 
     session_id = fh.get_session_id()
-    data = fh.get_page_content(session_id, PAGE)
-    m = re.search(pattern, data)
+    xhr_data = fh.get_xhr_content(session_id, PAGE)
+    data = json.loads(xhr_data)
+    m = re.search(pattern, data['data']['drain'][2]['statuses'][-1])
     if m:
         connected_devices = int(m.group(1))
         print('wifi.value %d' % connected_devices)
-
+ 
 
 def print_config():
     print('graph_title AVM Fritz!Box Connected Wifi Devices')

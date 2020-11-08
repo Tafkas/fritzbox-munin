@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
   fritzbox_smart_home_temperature - A munin plugin for Linux to monitor AVM Fritzbox SmartHome temperatures
-  Copyright (C) 2018 Bernd Oerding
+  Copyright (C) 2018-2020 Bernd Oerding
   Author: Bernd Oerding
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
@@ -29,7 +29,7 @@ PAGE = 'webservices/homeautoswitch.lua?switchcmd=getdevicelistinfos'
 
 
 def get_smart_home_temperature(debug=False):
-    """get the current cpu temperature"""
+    """get the current temperature"""
 
     session_id = fh.get_session_id()
     data = fh.get_page_content(session_id, PAGE)
@@ -40,8 +40,10 @@ def get_smart_home_temperature(debug=False):
         id = d.xpath("@id")[0]
         present = int(d.xpath("present/text()")[0])
         if present :
-            temp= float(d.xpath("temperature/celsius/text()")[0])/10
-            print ("t{}.value {}".format(id,temp))
+            temp =d.xpath("temperature/celsius/text()")
+            if len(temp) > 0 :
+                temp= float(d.xpath("temperature/celsius/text()")[0])/10            
+                print ("t{}.value {}".format(id,temp))
 
 
 def print_config():
@@ -60,13 +62,15 @@ def print_config():
         id = d.xpath("@id")[0]
         identifier = d.xpath("@identifier")[0]
         name = d.xpath("name/text()")[0]
-        name = unidecode(unicode(name))
+#        name = unidecode(unicode(name))
+        name = unidecode(name)
         pname = d.xpath("@productname")[0]
-        
-        print ("t{}.label {}".format(id,name)) 
-        print ("t{}.type GAUGE".format(id)) 
-        print ("t{}.graph LINE".format(id)) 
-        print ("t{}.info Temperature [{} - {}]".format(id,pname,identifier)) 
+        temp =d.xpath("temperature/celsius/text()")
+        if len(temp) > 0 :      
+            print ("t{}.label {}".format(id,name)) 
+            print ("t{}.type GAUGE".format(id)) 
+            print ("t{}.graph LINE".format(id)) 
+            print ("t{}.info Temperature [{} - {}]".format(id,pname,identifier)) 
     if os.environ.get('host_name'):
         print("host_name " + os.environ['host_name'])
 
