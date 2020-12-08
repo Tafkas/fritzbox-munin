@@ -75,7 +75,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
         pip install -r requirements.txt
  
- fritzconnection requires python3. Make shure python --version is >= 3.6.  
+ fritzconnection requires python3. Make sure python --version is >= 3.6.  
 
 2. Make sure the FritzBox has UPnP status information enabled. (German interface: Heimnetz > Heimnetzübersicht > Netzwerkeinstellungen > Statusinformationen über UPnP übertragen)
 
