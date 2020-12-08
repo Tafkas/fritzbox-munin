@@ -73,9 +73,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
 1. Pre-requesites for the fritzbox\_traffic and fritzbox\_uptime plugins are the [fritzconnection](https://pypi.python.org/pypi/fritzconnection) and [requests](https://pypi.python.org/pypi/requests) package. To install it
 
-        pip install fritzconnection
-        pip install lxml
-        pip install requests
+        pip install -r requirements.txt
  
  fritzconnection requires python3. Make shure python --version is >= 3.6.  
 
