@@ -20,7 +20,14 @@ import sys
 from fritzconnection import FritzConnection
 
 
-def model_needs_login(model: str) -> bool:
+def model_needs_login(model):
+    """
+    Checks if provided fritzbox model is in the list of devices which need an authenticated login
+    to extract traffic data.
+
+    :param model: String describing the fritzbox model; as returned from FritzConnection().modelname
+    :return bool
+    """
     models_require_login = [
         "FRITZ!Box 6490 Cable",
     ]
