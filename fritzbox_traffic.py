@@ -20,11 +20,26 @@ import sys
 from fritzconnection import FritzConnection
 
 
+def model_needs_login(model: str) -> bool:
+    models_require_login = [
+        "FRITZ!Box 6490 Cable",
+    ]
+    for m in models_require_login:
+        if model.startswith(m):
+            return True
+    return False
+
+
 def print_values():
     try:
         conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        if model_needs_login(conn.modelname):
+            conn = FritzConnection(address=os.environ['fritzbox_ip'],
+                                   user='dslf-config',
+                                   password=os.environ['fritzbox_password'],
+                                   )
     except Exception as e:
-        sys.exit("Couldn't get WAN traffic")
+        sys.exit("Couldn't establish connection to fritzbox")
 
     down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
     print('down.value %d' % down_traffic)
