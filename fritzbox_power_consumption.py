@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 """
   fritzbox_power_consumption - A munin plugin for Linux to monitor AVM Fritzbox

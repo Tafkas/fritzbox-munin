@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_helper - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -49,7 +49,7 @@ def get_session_id(server, username, password, port=80):
     try:
         state = get_login_state(box_url)
     except Exception as ex:
-        raise Exception("failed to get challenge") from ex
+        raise Exception("failed to get challenge")
     if state.is_pbkdf2:
         # print("PBKDF2 supported")
         challenge_response = calculate_pbkdf2_response(state.challenge, password)
