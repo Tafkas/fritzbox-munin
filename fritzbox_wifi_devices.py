@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_wifi_devices - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -9,7 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.fritzbox_password [fritzbox password]
+  env.FRITZ_PASSWORD [fritzbox password]
+  env.FRITZ_USERNAME [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -31,12 +32,16 @@ pattern = re.compile(patternLoc[locale])
 
 
 def get_connected_wifi_devices():
-    """gets the numbrer of currently connected wifi devices"""
+    """gets the numbrer of currently connected wi-fi devices"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
-    session_id = fh.get_session_id(server, password)
+    if "FRITZ_USERNAME" in os.environ:
+        fritzuser = os.getenv('FRITZ_USERNAME')
+        session_id = fh.get_session_id(server, password, fritzuser)
+    else:
+        session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     m = re.search(pattern, data['data']['drain'][2]['statuses'][-1])
@@ -46,7 +51,11 @@ def get_connected_wifi_devices():
 
 
 def print_config():
-    print('graph_title AVM Fritz!Box Connected Wifi Devices')
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print('graph_title Connected Wi-Fi Devices')
+    else:
+        print('graph_title AVM Fritz!Box Connected Wi-Fi Devices')
     print('graph_vlabel Number of devices')
     print('graph_args --base 1000')
     print('graph_category network')
@@ -55,8 +64,6 @@ def print_config():
     print('wifi.type GAUGE')
     print('wifi.graph LINE1')
     print('wifi.info Wifi Connections on 2.4 & 5 Ghz')
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
@@ -68,5 +75,5 @@ if __name__ == '__main__':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_connected_wifi_devices()
-        except:
-            sys.exit("Couldn't retrieve connected fritzbox wifi devices")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve connected fritzbox wifi devices: {e}")

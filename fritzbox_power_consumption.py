@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 """
   fritzbox_power_consumption - A munin plugin for Linux to monitor AVM Fritzbox
@@ -10,7 +10,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.fritzbox_password [fritzbox password]
+  env.FRITZ_PASSWORD [fritzbox password]
+  env.FRITZ_USERNAME [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -29,10 +30,14 @@ DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
 def get_power_consumption():
     """get the current power consumption usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
-    session_id = fh.get_session_id(server, password)
+    if "FRITZ_USERNAME" in os.environ:
+        fritzuser = os.getenv('FRITZ_USERNAME')
+        session_id = fh.get_session_id(server, password, fritzuser)
+    else:
+        session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     devices = data['data']['drain']
@@ -41,9 +46,13 @@ def get_power_consumption():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box Power Consumption")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Power consumption")
+    else:
+        print("graph_title AVM Fritz!Box Power Consumption")
     print("graph_vlabel %")
-    print("graph_category system")
+    print("graph_category sensors")
     print("graph_order system cpu wifi dsl ab usb")
     print("system.label system")
     print("system.type GAUGE")
@@ -81,8 +90,6 @@ def print_config():
     print("usb.min 0")
     print("usb.max 100")
     print("usb.info Fritzbox usb devices power consumption")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
@@ -94,5 +101,5 @@ if __name__ == '__main__':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_power_consumption()
-        except:
-            sys.exit("Couldn't retrieve fritzbox power consumption")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox power consumption: {e}")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_memory_usage - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -9,7 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.fritzbox_password [fritzbox password]
+  env.FRITZ_PASSWORD [fritzbox password]
+  env.FRITZ_USERNAME [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -27,10 +28,14 @@ USAGE = ['strict', 'cache', 'free']
 def get_memory_usage():
     """get the current memory usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
-    session_id = fh.get_session_id(server, password)
+    if "FRITZ_USERNAME" in os.environ:
+        fritzuser = os.getenv('FRITZ_USERNAME')
+        session_id = fh.get_session_id(server, password, fritzuser)
+    else:
+        session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     for i, usage in enumerate(USAGE):
@@ -38,7 +43,11 @@ def get_memory_usage():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box Memory")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Memory usage in percent")
+    else:
+        print("graph_title AVM Fritz!Box Memory")
     print("graph_vlabel %")
     print("graph_args --base 1000 -r --lower-limit 0 --upper-limit 100")
     print("graph_category system")
@@ -54,8 +63,6 @@ def print_config():
     print("free.label free")
     print("free.type GAUGE")
     print("free.draw STACK")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
@@ -67,5 +74,5 @@ if __name__ == '__main__':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_memory_usage()
-        except:
-            sys.exit("Couldn't retrieve fritzbox memory usage")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox memory usage: {e}")

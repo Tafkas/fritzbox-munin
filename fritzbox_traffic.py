@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_traffic - A munin plugin for Linux to monitor AVM Fritzbox WAN traffic
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -22,9 +22,9 @@ from fritzconnection import FritzConnection
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        conn = FritzConnection(address=os.getenv('fritzbox_ip'))
     except Exception as e:
-        sys.exit("Couldn't get WAN traffic")
+        sys.exit(f"Couldn't get WAN traffic: {e}")
 
     down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
     print('down.value %d' % down_traffic)
@@ -43,7 +43,11 @@ def print_values():
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box WAN traffic")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Uplink traffic")
+    else:
+        print("graph_title AVM Fritz!Box WAN traffic")
     print("graph_args --base 1000")
     print("graph_vlabel bits in (-) / out (+) per \${graph_period}")
     print("graph_category network")
@@ -56,7 +60,7 @@ def print_config():
     print("down.max 1000000000")
     print("up.label bps")
     print("up.type DERIVE")
-    print("up.draw AREA")
+    print("up.draw LINE")
     print("up.cdef up,8,*")
     print("up.min 0")
     print("up.max 1000000000")
@@ -71,8 +75,6 @@ def print_config():
         print("maxup.negative maxdown")
         print("maxup.draw LINE1")
         print("maxup.info Maximum speed of the WAN interface.")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == "__main__":
@@ -83,5 +85,5 @@ if __name__ == "__main__":
     elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
         try:
             print_values()
-        except:
-            sys.exit("Couldn't retrieve fritzbox traffic")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox traffic: {e}")

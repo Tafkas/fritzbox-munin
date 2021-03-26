@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_cpu_temperature - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -9,7 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.fritzbox_password [fritzbox password]
+  env.FRITZ_PASSWORD [fritzbox password]
+  env.FRITZ_USERNAME [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -26,17 +27,25 @@ PAGE = 'ecoStat'
 def get_cpu_temperature():
     """get the current cpu temperature"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
-    session_id = fh.get_session_id(server, password)
+    if "FRITZ_USERNAME" in os.environ:
+        fritzuser = os.getenv('FRITZ_USERNAME')
+        session_id = fh.get_session_id(server, password, fritzuser)
+    else:
+        session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     print('temp.value %d' % (int(data['data']['cputemp']['series'][0][-1])))
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box CPU temperature")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title Temperatures")
+    else:
+        print("graph_title AVM Fritz!Box CPU temperature")
     print("graph_vlabel degrees Celsius")
     print("graph_category sensors")
     print("graph_order tmp")
@@ -46,8 +55,6 @@ def print_config():
     print("temp.graph LINE1")
     print("temp.min 0")
     print("temp.info Fritzbox CPU temperature")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_cpu_usage - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -9,7 +9,8 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
-  env.fritzbox_password [fritzbox password]
+  env.FRITZ_PASSWORD [fritzbox password]
+  env.FRITZ_USERNAME [optional: fritzbox username]
   
   This plugin supports the following munin configuration parameters:
   #%# family=auto contrib
@@ -26,17 +27,25 @@ PAGE = 'ecoStat'
 def get_cpu_usage():
     """get the current cpu usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.getenv('fritzbox_ip')
+    password = os.getenv('FRITZ_PASSWORD')
 
-    session_id = fh.get_session_id(server, password)
+    if "FRITZ_USERNAME" in os.environ:
+        fritzuser = os.getenv('FRITZ_USERNAME')
+        session_id = fh.get_session_id(server, password, fritzuser)
+    else:
+        session_id = fh.get_session_id(server, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     print('cpu.value %d' % (int(data['data']['cpuutil']['series'][0][-1])))
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box CPU usage")
+    if os.environ.get('host_name'):
+        print("host_name " + os.getenv('host_name'))
+        print("graph_title CPU usage")
+    else :
+        print("graph_title AVM Fritz!Box CPU usage")
     print("graph_vlabel %")
     print("graph_category system")
     print("graph_order cpu")
@@ -46,8 +55,6 @@ def print_config():
     print("cpu.graph AREA")
     print("cpu.min 0")
     print("cpu.info Fritzbox CPU usage")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
 
 
 if __name__ == '__main__':
@@ -59,5 +66,5 @@ if __name__ == '__main__':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_cpu_usage()
-        except:
-            sys.exit("Couldn't retrieve fritzbox cpu usage")
+        except Exception as e:
+            sys.exit(f"Couldn't retrieve fritzbox cpu usage: {e}")
