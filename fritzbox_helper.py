@@ -25,7 +25,6 @@
 """
 
 import hashlib
-import os
 import sys
 import time
 
@@ -38,13 +37,13 @@ LOGIN_SID_ROUTE = "/login_sid.lua?version=2"
 
 
 class LoginState:
-    def __init__(self, challenge: str, blocktime: int):
+    def __init__(self, challenge, blocktime):
         self.challenge = challenge
         self.blocktime = blocktime
         self.is_pbkdf2 = challenge.startswith("2$")
 
 
-def get_session_id(server: str, username: str, password: str, port: int = 80) -> str:
+def get_session_id(server, username, password, port=80):
     """ Get a sid by solving the PBKDF2 (or MD5) challenge-response process. """
     box_url = "http://{}:{}".format(server, port)
     try:
@@ -69,7 +68,7 @@ def get_session_id(server: str, username: str, password: str, port: int = 80) ->
     return sid
 
 
-def get_login_state(box_url: str) -> LoginState:
+def get_login_state(box_url):
     """ Get login state from FRITZ!Box using login_sid.lua?version=2 """
     url = box_url + LOGIN_SID_ROUTE
     r = requests.get(url)
@@ -79,7 +78,7 @@ def get_login_state(box_url: str) -> LoginState:
     return LoginState(challenge, blocktime)
 
 
-def calculate_pbkdf2_response(challenge: str, password: str) -> str:
+def calculate_pbkdf2_response(challenge, password):
     """ Calculate the response for a given challenge via PBKDF2 """
     challenge_parts = challenge.split("$")
     # Extract all necessary values encoded into the challenge
@@ -94,7 +93,7 @@ def calculate_pbkdf2_response(challenge: str, password: str) -> str:
     return f"{challenge_parts[4]}${hash2.hex()}"
 
 
-def calculate_md5_response(challenge: str, password: str) -> str:
+def calculate_md5_response(challenge, password):
     """ Calculate the response for a challenge using legacy MD5 """
     response = challenge + "-" + password
     # the legacy response needs utf_16_le encoding
@@ -105,7 +104,7 @@ def calculate_md5_response(challenge: str, password: str) -> str:
     return response
 
 
-def send_response(box_url: str, username: str, challenge_response: str) -> str:
+def send_response(box_url, username, challenge_response):
     """ Send the response and return the parsed sid. raises an Exception on error """
     # Build response params
     post_data = {"username": username, "response": challenge_response}
