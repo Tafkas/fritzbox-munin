@@ -1,6 +1,6 @@
 # fritzbox-munin
 
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7590](http://geni.us/OO2c7S)(Amazon link) running FRITZ!OS 7.00.
+A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7590](http://geni.us/OO2c7S)(Amazon link) running FRITZ!OS 7.25.
 
 If you are using the scripts on a different Fritz!Box model please let me know by
 
@@ -21,7 +21,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 - [FRITZ!Box 7580](http://geni.us/yUYyQTE)
 - [FRITZ!Box 7590](http://geni.us/OO2c7S)
 
- If you are still running Fritz!OS 6.30 check out the [releases section](https://github.com/Tafkas/fritzbox-munin/releases/tag/6.30.1).
+ If you are still running an older Fritz!OS version check out the [releases section](https://github.com/Tafkas/fritzbox-munin/releases/).
 
 ## Introduction
 
