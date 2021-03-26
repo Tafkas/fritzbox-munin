@@ -9,6 +9,7 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_username [fritzbox username]
   env.fritzbox_password [fritzbox password]
   
   This plugin supports the following munin configuration parameters:
@@ -20,19 +21,20 @@ import os
 import sys
 import fritzbox_helper as fh
 
-PAGE = 'ecoStat'
+PAGE = "ecoStat"
 
 
 def get_cpu_temperature():
     """get the current cpu temperature"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.environ["fritzbox_ip"]
+    username = os.environ["fritzbox_username"]
+    password = os.environ["fritzbox_password"]
 
-    session_id = fh.get_session_id(server, password)
+    session_id = fh.get_session_id(server, username, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
-    print('temp.value %d' % (int(data['data']['cputemp']['series'][0][-1])))
+    print("temp.value %d" % (int(data["data"]["cputemp"]["series"][0][-1])))
 
 
 def print_config():
@@ -46,15 +48,15 @@ def print_config():
     print("temp.graph LINE1")
     print("temp.min 0")
     print("temp.info Fritzbox CPU temperature")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+    if os.environ.get("host_name"):
+        print("host_name " + os.environ["host_name"])
 
 
-if __name__ == '__main__':
-    if len(sys.argv) == 2 and sys.argv[1] == 'config':
+if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == "config":
         print_config()
-    elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print('yes')
-    elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
+    elif len(sys.argv) == 2 and sys.argv[1] == "autoconf":
+        print("yes")
+    elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == "fetch":
         # Some docs say it'll be called with fetch, some say no arg at all
         get_cpu_temperature()

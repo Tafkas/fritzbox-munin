@@ -10,6 +10,12 @@
   This plugin requires the fritzconnection plugin. To install it using pip:
   pip install fritzconnection
   This plugin supports the following munin configuration parameters:
+
+  [fritzbox_*]
+  env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_username [fritzbox username]
+  env.fritzbox_password [fritzbox password]
+
   #%# family=auto contrib
   #%# capabilities=autoconf
 """
@@ -17,29 +23,33 @@
 import os
 import sys
 
-from fritzconnection import FritzConnection
+from fritzconnection.lib.fritzstatus import FritzStatus
+
+server = os.environ["fritzbox_ip"]
+username = os.environ["fritzbox_username"]
+password = os.environ["fritzbox_password"]
 
 
 def print_values():
     try:
-        conn = FritzConnection(address=os.environ['fritzbox_ip'])
+        fs = FritzStatus(address=server, user=username, password=password)
     except Exception as e:
         sys.exit("Couldn't get WAN traffic")
 
-    down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesReceived')['NewTotalBytesReceived']
-    print('down.value %d' % down_traffic)
+    traffic = fs.transmission_rate
+    down_traffic = traffic[1]
+    print("down.value %d" % down_traffic)
 
-    up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetTotalBytesSent')['NewTotalBytesSent']
-    print('up.value %d' % up_traffic)
+    up_traffic = traffic[0]
+    print("up.value %d" % up_traffic)
 
-    if not os.environ.get('traffic_remove_max'):
-        max_down_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-            'NewLayer1DownstreamMaxBitRate']
-        print('maxdown.value %d' % max_down_traffic)
+    if not os.environ.get("traffic_remove_max"):
+        max_traffic = fs.max_bit_rate
+        max_down_traffic = max_traffic[1]
+        print("maxdown.value %d" % max_down_traffic)
 
-        max_up_traffic = conn.call_action('WANCommonInterfaceConfig', 'GetCommonLinkProperties')[
-            'NewLayer1UpstreamMaxBitRate']
-        print('maxup.value %d' % max_up_traffic)
+        max_up_traffic = max_traffic[0]
+        print("maxup.value %d" % max_up_traffic)
 
 
 def print_config():
@@ -62,7 +72,7 @@ def print_config():
     print("up.max 1000000000")
     print("up.negative down")
     print("up.info Traffic of the WAN interface.")
-    if not os.environ.get('traffic_remove_max'):
+    if not os.environ.get("traffic_remove_max"):
         print("maxdown.label received")
         print("maxdown.type GAUGE")
         print("maxdown.graph no")
@@ -71,16 +81,16 @@ def print_config():
         print("maxup.negative maxdown")
         print("maxup.draw LINE1")
         print("maxup.info Maximum speed of the WAN interface.")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+    if os.environ.get("host_name"):
+        print("host_name " + os.environ["host_name"])
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2 and sys.argv[1] == 'config':
+    if len(sys.argv) == 2 and sys.argv[1] == "config":
         print_config()
-    elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
+    elif len(sys.argv) == 2 and sys.argv[1] == "autoconf":
         print("yes")  # Some docs say it'll be called with fetch, some say no arg at all
-    elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == 'fetch'):
+    elif len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == "fetch"):
         try:
             print_values()
         except:

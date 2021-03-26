@@ -15,6 +15,8 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 - [FRITZ!Box 7390](http://geni.us/BlAP)
 - [FRITZ!Box 7430](http://geni.us/BlAP)
 - [FRITZ!Box 7490](http://geni.us/fTyoY)
+- [FRITZ!Box 7530](https://geni.us/h8oqYd)
+- [FRITZ!Box 7530 AX](https://geni.us/a4dS5)  
 - [FRITZ!Box 7560](http://geni.us/6gPZNI)
 - [FRITZ!Box 7580](http://geni.us/yUYyQTE)
 - [FRITZ!Box 7590](http://geni.us/OO2c7S)
@@ -41,32 +43,32 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
 ## fritzbox\_cpu\_usage
 
-  fritzbox\_cpu\_usage shows you the cpu usage (requires password)
+  fritzbox\_cpu\_usage shows you the cpu usage (requires username & password)
   ![http://i.imgur.com/A9uGvWP.png](http://i.imgur.com/A9uGvWP.png)
 
 ## fritzbox\_cpu\_temperature
 
-  fritzbox\_cpu\_temperature shows you the cpu temperature (requires password)
+  fritzbox\_cpu\_temperature shows you the cpu temperature (requires username & password)
   ![http://i.imgur.com/duHYhw6.png](http://i.imgur.com/duHYhw6.png)
 
 ## fritzbox\_memory\_usage
 
-  fritzbox\_memory\_usage shows you the memory usage (requires password)
+  fritzbox\_memory\_usage shows you the memory usage (requires username & password)
   ![http://i.imgur.com/WhxrINK.png](http://i.imgur.com/WhxrINK.png)
 
 ##  fritzbox\_power\_consumption
 
-  fritzbox\_power\_consumption shows you the power consumption (requires password)
+  fritzbox\_power\_consumption shows you the power consumption (requires username & password)
   ![http://i.imgur.com/a7uQzn6.png](http://i.imgur.com/a7uQzn6.png)
 
 ## fritzbox\_uptime
 
-  fritzbox\_uptime shows you the uptime in days (requires password) (language dependant, see below).
+  fritzbox\_uptime shows you the uptime in days (requires username & password) (language dependant, see below).
   ![http://i.imgur.com/Jr8OibH.png](http://i.imgur.com/Jr8OibH.png)
 
 ## fritzbox\_wifi\_devices
 
-  fritzbox\_wifi\_devices shows you the number of connected wifi clients (requires password) (language dependant, see below).
+  fritzbox\_wifi\_devices shows you the number of connected wifi clients (requires username & password) (language dependant, see below).
   ![http://i.imgur.com/lqvK1b2.png](http://i.imgur.com/lqvK1b2.png)
 
 ## Installation & Configuration
@@ -85,6 +87,7 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
         [fritzbox_*]
         env.fritzbox_ip <ip_address_to_your_fritzbox>
+        env.fritzbox_username <fritzbox_username>
         env.fritzbox_password <fritzbox_password>
         env.traffic_remove_max true # if you do not want the possible max values
         host_name fritzbox
