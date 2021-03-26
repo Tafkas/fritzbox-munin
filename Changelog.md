@@ -1,5 +1,15 @@
 # Changelog
 
+## 7.25.0
+*2021-03-26*
+
+- Support for FritzOS!7.25 including log in via username password
+
+## 7.0.0
+*2018-09-11*
+
+- Support for FritzOS!7.00
+
 ## 6.83.2
 *2017-09-05*
 

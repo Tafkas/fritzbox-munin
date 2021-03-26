@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 """
   fritzbox_power_consumption - A munin plugin for Linux to monitor AVM Fritzbox
@@ -10,6 +10,7 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_username [fritzbox username]
   env.fritzbox_password [fritzbox password]
   
   This plugin supports the following munin configuration parameters:
@@ -22,22 +23,23 @@ import sys
 
 import fritzbox_helper as fh
 
-PAGE = 'energy'
-DEVICES = ['system', 'cpu', 'wifi', 'dsl', 'ab', 'usb']
+PAGE = "energy"
+DEVICES = ["system", "cpu", "wifi", "dsl", "ab", "usb"]
 
 
 def get_power_consumption():
     """get the current power consumption usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.environ["fritzbox_ip"]
+    username = os.environ["fritzbox_username"]
+    password = os.environ["fritzbox_password"]
 
-    session_id = fh.get_session_id(server, password)
+    session_id = fh.get_session_id(server, username, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
-    devices = data['data']['drain']
+    devices = data["data"]["drain"]
     for i, device in enumerate(DEVICES):
-        print('%s.value %s' % (device, devices[i]['actPerc']))
+        print("%s.value %s" % (device, devices[i]["actPerc"]))
 
 
 def print_config():
@@ -81,16 +83,16 @@ def print_config():
     print("usb.min 0")
     print("usb.max 100")
     print("usb.info Fritzbox usb devices power consumption")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+    if os.environ.get("host_name"):
+        print("host_name " + os.environ["host_name"])
 
 
-if __name__ == '__main__':
-    if len(sys.argv) == 2 and sys.argv[1] == 'config':
+if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == "config":
         print_config()
-    elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print('yes')
-    elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
+    elif len(sys.argv) == 2 and sys.argv[1] == "autoconf":
+        print("yes")
+    elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == "fetch":
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_power_consumption()

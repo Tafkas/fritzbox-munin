@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_memory_usage - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
@@ -9,6 +9,7 @@
 
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
+  env.fritzbox_username [fritzbox username]
   env.fritzbox_password [fritzbox password]
   
   This plugin supports the following munin configuration parameters:
@@ -20,21 +21,22 @@ import os
 import sys
 import fritzbox_helper as fh
 
-PAGE = 'ecoStat'
-USAGE = ['strict', 'cache', 'free']
+PAGE = "ecoStat"
+USAGE = ["strict", "cache", "free"]
 
 
 def get_memory_usage():
     """get the current memory usage"""
 
-    server = os.environ['fritzbox_ip']
-    password = os.environ['fritzbox_password']
+    server = os.environ["fritzbox_ip"]
+    username = os.environ["fritzbox_username"]
+    password = os.environ["fritzbox_password"]
 
-    session_id = fh.get_session_id(server, password)
+    session_id = fh.get_session_id(server, username, password)
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     for i, usage in enumerate(USAGE):
-        print('%s.value %s' % (usage, data['data']['ramusage']['series'][i][-1]))
+        print("%s.value %s" % (usage, data["data"]["ramusage"]["series"][i][-1]))
 
 
 def print_config():
@@ -54,16 +56,16 @@ def print_config():
     print("free.label free")
     print("free.type GAUGE")
     print("free.draw STACK")
-    if os.environ.get('host_name'):
-        print("host_name " + os.environ['host_name'])
+    if os.environ.get("host_name"):
+        print("host_name " + os.environ["host_name"])
 
 
-if __name__ == '__main__':
-    if len(sys.argv) == 2 and sys.argv[1] == 'config':
+if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == "config":
         print_config()
-    elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
-        print('yes')
-    elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
+    elif len(sys.argv) == 2 and sys.argv[1] == "autoconf":
+        print("yes")
+    elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == "fetch":
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
             get_memory_usage()
