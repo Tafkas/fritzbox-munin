@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-  fritzbox_attenuation - A munin plugin for Linux to monitor AVM Fritzbox attenuation
+  fritzbox_attenuation - A munin plugin for Linux to monitor AVM Fritzbox noise margin
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
   Like Munin, this plugin is licensed under the GNU GPL v2 license
@@ -34,16 +34,16 @@ def print_values():
     try:
         fs = FritzStatus(address=server, user=username, password=password)
     except Exception as e:
-        sys.exit("Couldn't get attenuation")
+        sys.exit("Couldn't get noise margin")
 
-    attenuation = fs.attenuation
-    print("up.value %.2f" % (int(attenuation[0]) / 10.0))
-    print("down.value %.2f" % (int(attenuation[1]) / 10.0))
+    noise_margin = fs.noise_margin
+    print("up.value %.2f" % (int(noise_margin[0]) / 10.0))
+    print("down.value %.2f" % (int(noise_margin[1]) / 10.0))
 
 
 def print_config():
-    print("graph_title AVM Fritz!Box Attenuation")
-    print("graph_vlabel attenuation in dB")
+    print("graph_title AVM Fritz!Box Noise Margin")
+    print("graph_vlabel noise margin in dB")
     print("graph_scale no")
     print("graph_category network")
     print("down.type GAUGE")
@@ -65,4 +65,4 @@ if __name__ == "__main__":
         try:
             print_values()
         except:
-            sys.exit("Couldn't retrieve fritzbox attenuation")
+            sys.exit("Couldn't retrieve fritzbox noise_margin")
