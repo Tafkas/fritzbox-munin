@@ -1,0 +1,3 @@
+fritzconnection
+lxml
+requests
