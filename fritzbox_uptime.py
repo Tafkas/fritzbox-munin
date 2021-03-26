@@ -23,6 +23,7 @@ import sys
 import fritzbox_helper as fh
 
 locale = os.environ.get('locale', 'de')
+activeLoc = {"de": "aktiv", "en": "active"}
 patternLoc = {"de": r"(\d+)\s(Tag|Stunden|Minuten)",
               "en": r"(\d+)\s(days|hours|minutes)"}
 dayLoc = {"de": "Tag", "en": "days"}
@@ -43,7 +44,10 @@ def get_uptime():
     xhr_data = fh.get_xhr_content(server, session_id, PAGE)
     data = json.loads(xhr_data)
     for d in data['data']['drain']:
-        if 'aktiv' in d['statuses']:
+        if type(d['statuses']) != str and type(d['statuses']) != unicode:
+            continue
+
+        if activeLoc[locale] in d['statuses'].lower():
             matches = re.finditer(pattern, d['statuses'])
             if matches:
                 hours = 0.0
