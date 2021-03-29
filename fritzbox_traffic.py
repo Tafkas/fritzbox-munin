@@ -36,11 +36,10 @@ def print_values():
     except Exception as e:
         sys.exit("Couldn't get WAN traffic")
 
-    traffic = fs.transmission_rate
-    down_traffic = traffic[1]
+    down_traffic = fs.bytes_received
     print("down.value %d" % down_traffic)
 
-    up_traffic = traffic[0]
+    up_traffic = fs.bytes_received
     print("up.value %d" % up_traffic)
 
     if not os.environ.get("traffic_remove_max"):

@@ -90,7 +90,7 @@ def calculate_pbkdf2_response(challenge, password):
     # Once with dynamic salt.
     hash1 = hashlib.pbkdf2_hmac("sha256", password.encode(), salt1, iter1)
     hash2 = hashlib.pbkdf2_hmac("sha256", hash1, salt2, iter2)
-    return f"{challenge_parts[4]}${hash2.hex()}"
+    return "{}${}".format(challenge_parts[4], hash2.hex())
 
 
 def calculate_md5_response(challenge, password):
