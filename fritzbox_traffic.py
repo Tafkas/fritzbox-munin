@@ -39,7 +39,7 @@ def print_values():
     down_traffic = fs.bytes_received
     print("down.value %d" % down_traffic)
 
-    up_traffic = fs.bytes_received
+    up_traffic = fs.bytes_sent
     print("up.value %d" % up_traffic)
 
     if not os.environ.get("traffic_remove_max"):
