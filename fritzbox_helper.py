@@ -1,12 +1,17 @@
-#!/usr/bin/env python
 """
   fritzbox_helper - A munin plugin for Linux to monitor AVM Fritzbox
   Copyright (C) 2015 Christian Stade-Schuldt
   Author: Christian Stade-Schuldt
   Like Munin, this plugin is licensed under the GNU GPL v2 license
   http://www.opensource.org/licenses/GPL-2.0
-  Add the following section to your munin-node's plugin configuration:
 
+  Copyright (c) 2021 Oliver Edelmann
+  Author: Oliver Edelmann
+  Like Munin, this plugin is licensed under the GNU GPL v2 license
+  http://www.opensource.org/licenses/GPL-2.0
+
+
+  Add the following section to your munin-node's plugin configuration:
   [fritzbox_*]
   env.fritzbox_ip [ip address of the fritzbox]
   env.fritzbox_password [fritzbox password]
@@ -24,10 +29,49 @@ import hashlib
 import sys
 
 import requests
+import urllib.parse
 from lxml import etree
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0"
 
+"""
+  Code from https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID_deutsch_2021-05-03.pdf
+  start
+"""
+class LoginState: 
+    def __init__(self, challenge: str, blocktime: int): 
+        self.challenge = challenge 
+        self.blocktime = blocktime 
+        self.is_pbkdf2 = challenge.startswith("2$") 
+
+def calculate_pbkdf2_response(challenge: str, password: str) -> str: 
+    """ Calculate the response for a given challenge via PBKDF2 """ 
+    challenge_parts = challenge.split("$") 
+    # Extract all necessary values encoded into the challenge 
+    iter1 = int(challenge_parts[1]) 
+    salt1 = bytes.fromhex(challenge_parts[2]) 
+    iter2 = int(challenge_parts[3]) 
+    salt2 = bytes.fromhex(challenge_parts[4]) 
+    # Hash twice, once with static salt... 
+    hash1 = hashlib.pbkdf2_hmac("sha256", password.encode(), salt1, iter1) 
+    # Once with dynamic salt. 
+    hash2 = hashlib.pbkdf2_hmac("sha256", hash1, salt2, iter2) 
+    return f"{challenge_parts[4]}${hash2.hex()}" 
+ 
+ 
+def calculate_md5_response(challenge: str, password: str) -> str: 
+    """ Calculate the response for a challenge using legacy MD5 """ 
+    response = challenge + "-" + password 
+    # the legacy response needs utf_16_le encoding 
+    response = response.encode("utf_16_le") 
+    md5_sum = hashlib.md5() 
+    md5_sum.update(response) 
+    response = challenge + "-" + md5_sum.hexdigest() 
+    return response         
+"""
+  Code from https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID_deutsch_2021-05-03.pdf
+  start
+"""
 
 def get_session_id(server, password, port=80):
     """Obtains the session id after login into the Fritzbox.
@@ -52,14 +96,17 @@ def get_session_id(server, password, port=80):
         print(err)
         sys.exit(1)
 
+  
     root = etree.fromstring(r.content)
     session_id = root.xpath('//SessionInfo/SID/text()')[0]
+    user_id = root.xpath('//SessionInfo/Users/User/text()')[0]
+    challenge = root.xpath('//SessionInfo/Challenge/text()')[0]
+
     if session_id == "0000000000000000":
-        challenge = root.xpath('//SessionInfo/Challenge/text()')[0]
-        challenge_bf = ('{}-{}'.format(challenge, password)).encode('utf-16le')
-        m = hashlib.md5()
-        m.update(challenge_bf)
-        response_bf = '{}-{}'.format(challenge, m.hexdigest().lower())
+        if challenge.startswith("2$"):
+            response_bf = calculate_pbkdf2_response(challenge, password)
+        else:
+            response_bf = calculate_md5_response(challenge, password)
     else:
         return session_id
 
@@ -67,9 +114,10 @@ def get_session_id(server, password, port=80):
                "Content-Type": "application/x-www-form-urlencoded",
                "User-Agent": USER_AGENT}
 
-    url = 'http://{}:{}/login_sid.lua?&response={}'.format(server, port, response_bf)
+    url = 'http://{}:{}/login_sid.lua?version=2'.format(server, port)
     try:
-        r = requests.get(url, headers=headers)
+        data = {"username": "fritz8535", "response": response_bf}
+        r = requests.post(url, urllib.parse.urlencode(data).encode(), headers=headers)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
         print(err)

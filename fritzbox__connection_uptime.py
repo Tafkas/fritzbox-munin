@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_connection_uptime - A munin plugin for Linux to monitor AVM Fritzbox connection uptime
   Copyright (C) 2015 Christian Stade-Schuldt

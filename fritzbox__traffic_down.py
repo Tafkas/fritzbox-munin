@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   fritzbox_traffic - A munin plugin for Linux to monitor AVM Fritzbox WAN traffic
   Copyright (C) 2015 Christian Stade-Schuldt
