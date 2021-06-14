@@ -70,17 +70,20 @@ If you are using the scripts on a different Fritz!Box model please let me know b
 
             [fritzbox_*]
                env.fritzbox_password <fritzbox_password>
+               env.fritzbox_user <fritzbox_user> # User name is automaticly detected if you do have password only login and this value doesn't need to be set.
                env.traffic_remove_max true # if you do not want the possible max values
   
     2. multiple fritzboxes:
     
            [fritzbox_<fqdn1>_*]
-             env.fritzbox_password <fritzbox_password>
-             env.traffic_remove_max true # if you do not want the possible max values
+               env.fritzbox_password <fritzbox_password>
+               env.fritzbox_user <fritzbox_user> # User name is automaticly detected if you do have password only login and this value doesn't need to be set.
+               env.traffic_remove_max true # if you do not want the possible max values
 
            [fritzbox_<fqdn2>_*]
-             env.fritzbox_password <fritzbox_password>
-             env.traffic_remove_max true # if you do not want the possible max values
+               env.fritzbox_password <fritzbox_password>
+               env.fritzbox_user <fritzbox_user> # User name is automaticly detected if you do have password only login and this value doesn't need to be set.
+               env.traffic_remove_max true # if you do not want the possible max values
 
 6. Create symbolic link in `/etc/munin/plugins` for `fritzbox_helper.py`.
 

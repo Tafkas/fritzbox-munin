@@ -1,4 +1,7 @@
 # Changelog
+##
+*2021-06-14*
+- Support for FRITZ!OS 7.24. Login without Username was removed.  
 
 ## 6.83.2
 *2017-09-05*

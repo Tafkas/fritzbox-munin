@@ -27,6 +27,7 @@
 
 import hashlib
 import sys
+import os
 
 import requests
 import urllib.parse
@@ -38,12 +39,6 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/2010010
   Code from https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID_deutsch_2021-05-03.pdf
   start
 """
-class LoginState: 
-    def __init__(self, challenge: str, blocktime: int): 
-        self.challenge = challenge 
-        self.blocktime = blocktime 
-        self.is_pbkdf2 = challenge.startswith("2$") 
-
 def calculate_pbkdf2_response(challenge: str, password: str) -> str: 
     """ Calculate the response for a given challenge via PBKDF2 """ 
     challenge_parts = challenge.split("$") 
@@ -96,11 +91,18 @@ def get_session_id(server, password, port=80):
         print(err)
         sys.exit(1)
 
-  
     root = etree.fromstring(r.content)
     session_id = root.xpath('//SessionInfo/SID/text()')[0]
-    user_id = root.xpath('//SessionInfo/Users/User/text()')[0]
     challenge = root.xpath('//SessionInfo/Challenge/text()')[0]
+    new_login = True
+
+    try:
+        user_id = root.xpath('//SessionInfo/Users/User/text()')[0]
+    except IndexError:
+        new_login = False
+    
+    if "fritzbox_user" in os.environ:
+        user_id = os.environ['fritzbox_user'] 
 
     if session_id == "0000000000000000":
         if challenge.startswith("2$"):
@@ -114,10 +116,14 @@ def get_session_id(server, password, port=80):
                "Content-Type": "application/x-www-form-urlencoded",
                "User-Agent": USER_AGENT}
 
-    url = 'http://{}:{}/login_sid.lua?version=2'.format(server, port)
     try:
-        data = {"username": "fritz8535", "response": response_bf}
-        r = requests.post(url, urllib.parse.urlencode(data).encode(), headers=headers)
+        if new_login:
+            url = 'http://{}:{}/login_sid.lua?version=2'.format(server, port)
+            data = {"username": user_id,"response": response_bf}
+            r = requests.post(url, urllib.parse.urlencode(data).encode(), headers=headers)
+        else:
+            url = 'http://{}:{}/login_sid.lua?&response={}'.format(server, port, response_bf) 
+            r = requests.get(url, headers=headers)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
         print(err)
