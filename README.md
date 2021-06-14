@@ -1,8 +1,13 @@
 # fritzbox-munin
 
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7490](http://geni.us/OO2c7S)(Amazon link) running FRITZ!OS 07.12.
+A collection of munin plugins to monitor your AVM FRITZ!Box router. 
+The scripts have been developed using with
+ FRITZ!Box 7490 running FRITZ!OS 07.12.
+ FRITZ!Box 7580 running FRITZ!OS 07.25.
 
-If you are using the scripts on a different Fritz!Box model please let me know by
+I only tested the new Version with python3.
+
+If you are using the scripts on a different Fritz!Box model please let me know 
 
 ## Introduction
 
