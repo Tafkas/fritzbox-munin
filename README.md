@@ -71,6 +71,9 @@ If you are using the scripts on a different Fritz!Box model please let me know b
   fritzbox\_wifi\_devices shows you the number of connected wifi clients (requires username & password) (language dependant, see below).
   ![http://i.imgur.com/lqvK1b2.png](http://i.imgur.com/lqvK1b2.png)
 
+## fritzbox\_smart\_home
+   fritzbox\_smart\_home shows the temperatures, power, states etc. of connected smart home devices
+
 ## Installation & Configuration
 
 1. Pre-requesites for the fritzbox\_traffic and fritzbox\_uptime plugins are the [fritzconnection](https://pypi.python.org/pypi/fritzconnection) and [requests](https://pypi.python.org/pypi/requests) package. To install it
