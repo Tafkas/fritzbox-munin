@@ -118,6 +118,10 @@ def getSimplifiedDevices(debug=False):
 
                     simpleDev["currentTemperatureInDegC"] = skill["currentInCelsius"]
                     
+                elif (skillType == "SmartHomeHumiditySensor"):
+
+                    simpleDev["currentHumidityInPct"] = skill["currentInPercent"]
+                    
                 elif (skillType == "SmartHomeBattery"):
                     
                     simpleDev["batteryChargeLevelInPct"] = skill["chargeLevelInPercent"]
@@ -183,6 +187,16 @@ def get_smart_home_temperature(debug=False):
         if dev["present"] and "currentTemperatureInDegC" in dev:
             print ("t{}.value {}"    .format(dev["id"], dev["currentTemperatureInDegC"]))
 
+            
+    print("")
+    print("multigraph humidity")
+    for dev in simpleDevices:
+        
+        if dev["present"] and "currentHumidityInPct" in dev:
+            print ("humidity{}.value {}".format(dev["id"], dev["currentHumidityInPct"])) 
+            
+
+
 
     print("\n")
     print("multigraph temperatures_target")
@@ -244,6 +258,7 @@ def get_smart_home_temperature(debug=False):
             print ("battery{}.value {}".format(dev["id"], dev["batteryChargeLevelInPct"])) 
             
 
+                
                 
     print("")
     print("multigraph batterylow")
@@ -308,6 +323,29 @@ def print_config():
             print ("t{}.type GAUGE"                                      .format(dev["id"])) 
             print ("t{}.graph LINE"                                      .format(dev["id"])) 
             print ("t{}.info Locally measured temperature [{} - {}]"     .format(dev["id"], dev["model"], dev["identifier"]))
+
+            
+    print("\n")
+    print("multigraph humidity")
+    print("graph_title AVM Fritz!Box SmartHome Humidity")
+    print("graph_vlabel percent")
+    print("graph_category sensors")
+    print("graph_scale no")
+    print("\n")
+
+
+    for dev in simpleDevices:
+        if dev["present"] and "currentHumidityInPct" in dev:
+            print ("humidity{}.label {}"                                  .format(dev["id"], dev["displayName"])) 
+            print ("humidity{}.type GAUGE"                                .format(dev["id"])) 
+            print ("humidity{}.graph LINE"                                .format(dev["id"])) 
+            print ("humidity{}.max 100"                                   .format(dev["id"])) 
+            print ("humidity{}.min   0"                                   .format(dev["id"])) 
+            print ("humidity{}.warning 30:70"                             .format(dev["id"])) 
+            print ("humidity{}.critical 20:75"                            .format(dev["id"])) 
+            print ("humidity{}.info Humidity [{} - {}]"                   .format(dev["id"], dev["model"], dev["identifier"]))
+
+
 
 
     print("\n")
@@ -546,8 +584,8 @@ if __name__ == '__main__':
         get_smart_home_temperature(True)
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
-       try:
+        try:
             get_smart_home_temperature()
-       except:
+        except:
             sys.exit("Couldn't retrieve fritzbox smarthome temperatures")
 
