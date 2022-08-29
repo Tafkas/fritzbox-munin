@@ -137,13 +137,11 @@ def getSimplifiedDevices(debug=False):
                     if "powerConsumptionInWatt" in skill:
                         simpleDev["powerInWatt"] = skill["powerConsumptionInWatt"]
 
+                    if "powerPerHour" in skill:
+                        simpleDev["energyInKWH"] = float(skill["powerPerHour"]) / 1000
+
                     if "voltageInVolt" in skill:
                         simpleDev["voltageInVolt"] = skill["voltageInVolt"]
-
-
-                    # FIXME: no energy any more
-                    # if "FIXME" in skill:
-                    #    simpleDev["energyInKWH"] = FIXME
 
                 elif (skillType == "SmartHomeSocket"):
                     pass
@@ -172,8 +170,8 @@ def getSimplifiedDevices(debug=False):
 # end getSimplifiedDevices
 
 
-def get_smart_home_temperature(debug=False):
-    """get the current temperature"""
+def get_smart_home_measurements(debug=False):
+    """get the current measurements (temperature, humidity, power, states, ...)"""
 
 
     simpleDevicesDict = getSimplifiedDevices(debug)
@@ -581,11 +579,11 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
         print('yes')
     elif len(sys.argv) == 2 and sys.argv[1] == 'debug':
-        get_smart_home_temperature(True)
+        get_smart_home_measurements(True)
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
-            get_smart_home_temperature()
+            get_smart_home_measurements()
         except:
             sys.exit("Couldn't retrieve fritzbox smarthome temperatures")
 
