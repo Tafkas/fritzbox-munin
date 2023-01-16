@@ -44,8 +44,8 @@ def getSimplifiedDevices(debug=False):
         
     xhr_data   = fh.get_xhr_content(server, session_id, PAGE)
     
-    #if debug:
-    #    pp.pprint(xhr_data)
+    if debug:
+        pp.pprint(xhr_data)
         
     data       = json.loads(xhr_data)
 
@@ -170,12 +170,8 @@ def getSimplifiedDevices(debug=False):
 # end getSimplifiedDevices
 
 
-def get_smart_home_measurements(debug=False):
+def print_smart_home_measurements(simpleDevices, debug=False):
     """get the current measurements (temperature, humidity, power, states, ...)"""
-
-
-    simpleDevicesDict = getSimplifiedDevices(debug)
-    simpleDevices     = sorted(simpleDevicesDict.values(), key = lambda x:x["id"])
 
     
     print("multigraph temperatures")
@@ -285,6 +281,18 @@ def get_smart_home_measurements(debug=False):
 
             
     print("")
+    print("multigraph powerAvg")
+    for dev in simpleDevices:
+        
+        if dev["present"] and "energyInKWH" in dev:
+            # it is ok to use integer Joules here: 1 Joule in 5 min
+            # => 0.003 W precision => We don't care, the device doesn't have this precision
+            energyInJoule = int(dev["energyInKWH"] * 3600000)
+            devID         = dev["id"]
+            print (f"powerAvg{devID}.value {energyInJoule:15}")
+        # end 
+
+    print("")
     print("multigraph energy")
     for dev in simpleDevices:
         
@@ -299,12 +307,17 @@ def get_smart_home_measurements(debug=False):
             print ("powerswitch{}.value {}".format(dev["id"], int(dev["powerSwitchOn"])))
             
 
+def getDevices(debug=False):
+    
+    simpleDevicesDict = getSimplifiedDevices(debug)
+    simpleDevices     = sorted(simpleDevicesDict.values(), key = lambda x: x["displayName"])
+
+    return simpleDevices
+# end getDevices
                 
 
-def print_config():
+def print_config(simpleDevices, debug=False):
 
-    simpleDevicesDict = getSimplifiedDevices(debug = False)
-    simpleDevices     = sorted(simpleDevicesDict.values(), key = lambda x: x["id"])
     
     
     print("multigraph temperatures")
@@ -519,6 +532,10 @@ def print_config():
     print("graph_vlabel Watt")
     print("graph_category sensors")
     print("graph_scale no")
+
+    powerIdList = [f'power{dev["id"]}' for dev in simpleDevices if ( dev["present"] and "powerInWatt" in dev ) ]
+    print("graph_order total_power " + " ".join(powerIdList))
+
     print("\n")
     
     for dev in simpleDevices:
@@ -530,7 +547,39 @@ def print_config():
             print ("power{}.warning  1500"                               .format(dev["id"])) 
             print ("power{}.critical 2000"                               .format(dev["id"])) 
             print ("power{}.info Power [{} - {}]"                        .format(dev["id"], dev["model"], dev["identifier"]))
+        # end if
+    # end if
+
+                                           
+    print(f"total_power.label       total")
+    print(f"total_power.cdef        " + ",".join(powerIdList) + ",ADDNAN" * (len(powerIdList) - 1));
+    print(f"total_power.min         0")
+
+
+
+    print("\n")
+    print("multigraph powerAvg")
+    print("graph_title AVM Fritz!Box SmartHome Power Average (from Energy)")
+    print("graph_vlabel W")
+    print("graph_category sensors")
+    print("graph_scale no")
+                                           
+    powerAvgIdList = [f'powerAvg{dev["id"]}' for dev in simpleDevices if ( dev["present"] and "energyInKWH" in dev ) ]
+    print("graph_order total_powerAvg " + " ".join(powerAvgIdList))
+
+    print("\n")
+    
+    for dev in simpleDevices:
+        if dev["present"] and "energyInKWH" in dev:
+            print ("powerAvg{}.label {}"                                   .format(dev["id"], dev["displayName"]))
+            print ("powerAvg{}.type DERIVE"                                .format(dev["id"])) 
+            print ("powerAvg{}.graph LINE"                                 .format(dev["id"])) 
+            print ("powerAvg{}.min   0"                                    .format(dev["id"])) 
+            print ("powerAvg{}.info Power Average [{} - {}]"               .format(dev["id"], dev["model"], dev["identifier"]))
             
+    print(f"total_powerAvg.label       total")
+    print(f"total_powerAvg.cdef        " + ",".join(powerAvgIdList) + ",ADDNAN" * (len(powerAvgIdList) - 1));
+    print(f"total_powerAvg.min         0")
 
 
     print("\n")
@@ -539,6 +588,10 @@ def print_config():
     print("graph_vlabel kWh")
     print("graph_category sensors")
     print("graph_scale no")
+                                           
+    energyIdList = [f'energy{dev["id"]}' for dev in simpleDevices if ( dev["present"] and "energyInKWH" in dev ) ]
+    print("graph_order total_energy " + " ".join(energyIdList))
+
     print("\n")
     
     for dev in simpleDevices:
@@ -549,6 +602,10 @@ def print_config():
             print ("energy{}.min   0"                                    .format(dev["id"])) 
             print ("energy{}.info Energy [{} - {}]"                      .format(dev["id"], dev["model"], dev["identifier"]))
             
+    print(f"total_energy.label       total")
+    print(f"total_energy.cdef        " + ",".join(energyIdList) + ",ADDNAN" * (len(energyIdList) - 1));
+    print(f"total_energy.min         0")
+
 
 
     print("\n")
@@ -575,15 +632,22 @@ def print_config():
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'config':
-        print_config()
+        devices = getDevices(debug = False)
+        print_config(devices)
+        if "MUNIN_CAP_DIRTYCONFIG" in os.environ and os.environ["MUNIN_CAP_DIRTYCONFIG"] == "1":
+            print("")
+            print_smart_home_measurements(devices, debug = False)
+        # end if DIRTY CONFIG
     elif len(sys.argv) == 2 and sys.argv[1] == 'autoconf':
         print('yes')
     elif len(sys.argv) == 2 and sys.argv[1] == 'debug':
-        get_smart_home_measurements(True)
+        devices = getDevices(debug = True)
+        print_smart_home_measurements(devices, debug = True)
     elif len(sys.argv) == 1 or len(sys.argv) == 2 and sys.argv[1] == 'fetch':
         # Some docs say it'll be called with fetch, some say no arg at all
         try:
-            get_smart_home_measurements()
+            devices = getDevices(debug = False)
+            print_smart_home_measurements(devices, debug = False)
         except:
             sys.exit("Couldn't retrieve fritzbox smarthome temperatures")
 
