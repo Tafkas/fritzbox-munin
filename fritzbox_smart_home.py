@@ -100,7 +100,7 @@ def getSimplifiedDevices(debug=False):
                     if "holidayActive" in skill:
                         simpleDev["holidayActive"          ] = skill["holidayActive"]
                         
-                    if "temperatureDropDetection" in skill:
+                    if "temperatureDropDetection" in skill and "isWindowOpen" in skill["temperatureDropDetection"]:
                         simpleDev["windowOpen"             ] = skill["temperatureDropDetection"]["isWindowOpen"]
                         
                     if "targetTemp" in skill:
