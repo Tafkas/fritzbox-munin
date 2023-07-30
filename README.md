@@ -1,25 +1,39 @@
 # fritzbox-munin
 
-A collection of munin plugins to monitor your AVM FRITZ!Box router. The scripts have been developed using a [FRITZ!Box 7590](http://geni.us/OO2c7S)(Amazon link) running FRITZ!OS 7.25.
+A  collection   of  munin  plugins   to  monitor  your   AVM  FritzBox
+router, forked from https://github.com/Tafkas/fritzbox-munin .
+
+With  my personal  extensions for smart  home devices  such as
+temperature,  humidity, battery,  power, states.  Originally based  on
+fritzbox_smart_home_temperature.py               of               fork
+https://github.com/erni4711/fritzbox-munin, but significantly extended
+and reworked for FritzOS 7.29 + 7.56.
 
 If you are using the scripts on a different Fritz!Box model please let me know by
 
 - opening an issue
 - submitting a pull request
 
- So far the following models (running FRITZ!OS 06.83) have been confirmed working:
+ Current tests are performed with
 
-- [FRITZ!Box 3370](http://geni.us/zh3U)
-- [FRITZ!Box 5490](http://geni.us/ACtUyFt)
-- [FRITZ!Box 7362 SL](http://geni.us/fTyoY)
-- [FRITZ!Box 7390](http://geni.us/BlAP)
-- [FRITZ!Box 7430](http://geni.us/BlAP)
-- [FRITZ!Box 7490](http://geni.us/fTyoY)
-- [FRITZ!Box 7530](https://geni.us/h8oqYd)
-- [FRITZ!Box 7530 AX](https://geni.us/a4dS5)  
-- [FRITZ!Box 7560](http://geni.us/6gPZNI)
-- [FRITZ!Box 7580](http://geni.us/yUYyQTE)
-- [FRITZ!Box 7590](http://geni.us/OO2c7S)
+- FRITZ!Box 7490, Fritz!OS 7.56, (formerly 7.29)
+
+
+ In the original repository ( https://github.com/Tafkas/fritzbox-munin
+ ) the following  models (running FRITZ!OS 06.83)  have been confirmed
+ working:
+
+- FRITZ!Box 3370
+- FRITZ!Box 5490
+- FRITZ!Box 7362 SL
+- FRITZ!Box 7390
+- FRITZ!Box 7430
+- FRITZ!Box 7490
+- FRITZ!Box 7530
+- FRITZ!Box 7530 AX
+- FRITZ!Box 7560
+- FRITZ!Box 7580
+- FRITZ!Box 7590
 
  If you are still running an older Fritz!OS version check out the [releases section](https://github.com/Tafkas/fritzbox-munin/releases/).
 
