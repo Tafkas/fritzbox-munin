@@ -93,13 +93,27 @@ def getSimplifiedDevices(debug=False):
                     
                     if "mode" in skill:
                         simpleDev["mode"                   ] = skill["mode"]
+
+                    # new state reporting in Fritz!OS 7.51/7.56
+                    if "state" in skill:
+                        state = skill["state"]
+                        if "current" in state:
+                            simpleDev["summerActive"] = 1 if state["current"] == "SUMMER"      else 0
+                            simpleDev["holidyActive"] = 1 if state["current"] == "HOLIDAY"     else 0  # FIXME: guess, to be tested
+                            simpleDev["windowOpen"  ] = 1 if state["current"] == "WINDOW_OPEN" else 0  # FIXME: guess, to be tested
+                        # end if
+                    # end if
+                                
                         
+                    # old state reporting in Fritz!OS 7.29/7.31
                     if "summerActive" in skill:
                         simpleDev["summerActive"           ] = skill["summerActive"]
                         
+                    # old state reporting in Fritz!OS 7.29/7.31
                     if "holidayActive" in skill:
                         simpleDev["holidayActive"          ] = skill["holidayActive"]
                         
+                    # old state reporting in Fritz!OS 7.29/7.31
                     if "temperatureDropDetection" in skill and "isWindowOpen" in skill["temperatureDropDetection"]:
                         simpleDev["windowOpen"             ] = skill["temperatureDropDetection"]["isWindowOpen"]
                         
@@ -116,15 +130,23 @@ def getSimplifiedDevices(debug=False):
                         
                 elif (skillType == "SmartHomeTemperatureSensor"):
 
-                    simpleDev["currentTemperatureInDegC"] = skill["currentInCelsius"]
+                    # let's    not    blindly    assume    that    the
+                    # currentInCelsius is  there.  Seems that  after a
+                    # fritzbox  restart,   thermostats  are   not  yet
+                    # connected properly to the fritz box and that the
+                    # report has the  devices, but without temperature
+                    # entry until DECT connection is established again.
+                    simpleDev["currentTemperatureInDegC"] = skill["currentInCelsius"]     if ("currentInCelsius"     in skill) else None
                     
                 elif (skillType == "SmartHomeHumiditySensor"):
 
-                    simpleDev["currentHumidityInPct"] = skill["currentInPercent"]
+                    # Why this check: See skill["currentInCelsius"]
+                    simpleDev["currentHumidityInPct"]     = skill["currentInPercent"]     if ("currentInPercent"     in skill) else None
                     
                 elif (skillType == "SmartHomeBattery"):
                     
-                    simpleDev["batteryChargeLevelInPct"] = skill["chargeLevelInPercent"]
+                    # Why this check: See skill["currentInCelsius"]
+                    simpleDev["batteryChargeLevelInPct"]  = skill["chargeLevelInPercent"] if ("chargeLevelInPercent" in skill) else None
 
                     # FIXME: currently no batteryLow indicator available
                     # simpleDev["batteryLow"] = FIXME
@@ -168,6 +190,8 @@ def getSimplifiedDevices(debug=False):
     return simplifiedDevices
 
 # end getSimplifiedDevices
+
+
 
 
 def print_smart_home_measurements(simpleDevices, debug=False):
